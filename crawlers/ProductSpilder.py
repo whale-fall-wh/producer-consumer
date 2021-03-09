@@ -42,6 +42,7 @@ if __name__ == '__main__':
         'B074PLWQY3',
         'B077JYR2M2'
     ]
+    http = Http()
     for asin_str in asin_map:
-        ProductCrawler(asin_str).run(Http())
+        ProductCrawler(asin_str).run(http)
         common.sleep_random()

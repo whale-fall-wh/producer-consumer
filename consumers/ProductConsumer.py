@@ -9,12 +9,17 @@ class ProductConsumer(BaseConsumer):
     # ignore = True     # 忽略该消费者
     job_key = 'product_asin'
 
+    def __init__(self):
+        BaseConsumer.__init__(self)
+
     def run(self):
         Logger().info('product_consumer start')
+        http = Http()
+
         while True:
             asin_str = self.get_job()
             if asin_str:
-                ProductCrawler(asin_str).run(Http())
+                ProductCrawler(asin_str).run(http)
                 common.sleep_random()
             else:
                 common.sleep(5)

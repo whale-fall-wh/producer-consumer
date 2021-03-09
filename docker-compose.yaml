@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  amazon-splider:
+    container_name: amazon-splider
+    command: python main.py
+    build:
+      context: .
+    volumes:
+      - /Users/wanghua/PycharmProjects/amazon:/app
+    restart: always
+    networks:
+      net:
+
+networks:
+  net:

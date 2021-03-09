@@ -9,7 +9,7 @@ class Logger:
 
     def __init__(self):
         self.log_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/logs/'
-        self.log_filename = self.log_dir_path + datetime.date.today().strftime('%Y-%m-%d')
+        self.log_filename = self.log_dir_path + datetime.date.today().strftime('%Y-%m-%d') + '.log'
 
         self.logger = logging.getLogger(self.log_filename)
 
@@ -23,7 +23,7 @@ class Logger:
 
         # 输出INFO级别日志到文件
         th = logging.FileHandler(self.log_filename, encoding='utf-8')
-        th.setFormatter(logging.Formatter('%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'))
+        th.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s: %(message)s'))
         th.setLevel(logging.INFO)
         self.logger.addHandler(th)
 

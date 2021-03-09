@@ -11,7 +11,6 @@ class Producer:
     def start(self):
         for producer in self.producers:
             producer()
-        # schedule.every(1).seconds.do(job)
         while True:
             schedule.run_pending()
             time.sleep(1)
@@ -29,7 +28,7 @@ class Consumer:
     def start(self):
         for consumer in self.yield_consumer():
             t = consumer()
-            t.setDaemon(False)
+            t.setDaemon(True)
             t.start()
 
 
