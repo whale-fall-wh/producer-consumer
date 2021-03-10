@@ -5,6 +5,9 @@ import producers
 
 
 class Producer:
+    """
+    生产任务
+    """
     def __init__(self):
         self.producers = producers.producers
 
@@ -17,16 +20,14 @@ class Producer:
 
 
 class Consumer:
-
+    """
+    消费任务--多线程，继承多线程类，一个job一个线程
+    """
     def __init__(self):
         self.consumers = consumers.consumer
 
-    def yield_consumer(self):
-        for consumer in self.consumers:
-            yield consumer
-
     def start(self):
-        for consumer in self.yield_consumer():
+        for consumer in self.consumers:
             t = consumer()
             t.setDaemon(True)
             t.start()
