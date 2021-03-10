@@ -1,3 +1,6 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from crawlers.ProductSpilder import ProductCrawler
 from utils.Logger import Logger
 from utils.Http import Http

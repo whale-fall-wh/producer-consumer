@@ -1,3 +1,6 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from producers.BaseProducer import BaseProducer
 import schedule
 

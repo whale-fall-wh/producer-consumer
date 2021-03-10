@@ -1,3 +1,6 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import common
 from utils.Logger import Logger
 from utils.Http import Http

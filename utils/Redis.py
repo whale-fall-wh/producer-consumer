@@ -1,3 +1,6 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import redis
 from decouple import config
 from utils.Singleton import singleton

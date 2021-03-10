@@ -1,3 +1,6 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from lxml import etree
 from utils.Http import Http
 from crawlers.Captcha import Captcha

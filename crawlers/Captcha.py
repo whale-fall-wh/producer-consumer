@@ -1,3 +1,6 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from utils.Http import Http
 from lxml import etree
 from utils.Logger import Logger
