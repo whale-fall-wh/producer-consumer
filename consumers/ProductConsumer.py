@@ -19,7 +19,7 @@ class ProductConsumer(BaseConsumer):
         while True:
             asin_str = self.get_job()
             if asin_str:
-                ProductCrawler(asin_str).run(http)
+                ProductCrawler(asin_str, http)
                 common.sleep_random()
             else:
                 common.sleep(5)

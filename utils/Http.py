@@ -22,10 +22,12 @@ class Http:
     headers = dict()
 
     def __init__(self):
-        self.headers['user-agent'] = UserAgent().random
+        # self.headers['user-agent'] = UserAgent(verify_ssl=False).random
+        self.headers['user-agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' \
+                                     '(KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36'
         self.http = requests.session()
         self.http.headers = self.headers
-        self.http.proxies = Proxy().proxy
+        # self.http.proxies = Proxy().proxy
 
     def get(self, url, **kwargs):
         return self.http.get(url=url, **kwargs)

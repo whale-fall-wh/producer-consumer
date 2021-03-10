@@ -3,19 +3,21 @@ from utils.Logger import Logger
 from utils.Http import Http
 import requests
 from crawlers.elements.ProductTitle import get_title
+from crawlers.BaseAmazonSpider import BaseAmazonSpider
 
 
-class ProductCrawler:
+class ProductCrawler(BaseAmazonSpider):
     base_url = 'https://www.amazon.com/dp/{}'
 
-    def __init__(self, asin: str):
+    def __init__(self, asin: str, http: Http):
         self.asin = asin
         self.url = self.base_url.format(self.asin)
+        BaseAmazonSpider.__init__(self, http=http)
 
-    def run(self, http: Http):
+    def run(self):
         try:
             Logger().debug('开始抓取{}产品，地址 {}'.format(self.asin, self.url))
-            rs = http.get(url=self.url, timeout=10)
+            rs = self.get(url=self.url, timeout=10)
             title = get_title(rs.text)
             if title:
                 Logger().info(title)
@@ -29,20 +31,11 @@ class ProductCrawler:
 if __name__ == '__main__':
     asin_map = [
         'B01NAWKYZ0',
-        'B07214SKYV',
-        'B072JMFRKQ',
-        'B078NLCPYW',
-        'B07BWPNMCB',
-        'B075DGQWZT',
-        'B077JYGQZ1',
-        'B071WPR3FC',
-        'B07TWPMZFF',
-        'B07TYPP711',
-        'B085Q2NVN8',
-        'B074PLWQY3',
-        'B077JYR2M2'
+        'B01NAWKYZ0',
+        'B01NAWKYZ0',
+        'B01NAWKYZ0',
     ]
-    http = Http()
+    new_http = Http()
     for asin_str in asin_map:
-        ProductCrawler(asin_str).run(http)
+        ProductCrawler(asin_str, new_http)
         common.sleep_random()
