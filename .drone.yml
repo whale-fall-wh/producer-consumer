@@ -3,3 +3,31 @@ type: docker
 name: default
 
 steps:
+  - name: deploy
+    image: wanghua35/deploy
+    volumes:
+      - name: develop-key
+        path: /root/.ssh/deployer.id_rsa
+      - name: production-key
+        path: /root/.ssh/id_rsa
+    commands:
+      - set -ex
+      - |
+        if [[ $DRONE_BRANCH = "master" ]]; then
+          stage=production
+        else
+          stage=develop
+        fi
+        /app/deploy/bin/dep python $stage
+    when:
+      branch:
+        - master
+        - develop
+
+volumes:
+  - name: develop-key
+    host:
+      path: /home/service/storage/devops/deploy/.ssh/deployer.id_rsa
+  - name: production-key
+    host:
+      path: /home/admin/.ssh/id_rsa
