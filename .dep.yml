@@ -1,3 +1,41 @@
+develop:
+  project: python
+  hosts:
+    local:
+      ip: 192.168.1.220
+      port: 22
+      user: admin
+      identity_file: ~/.ssh/deployer.id_rsa
+  config:
+    debug: true
+    from: ./
+    keep_releases: 5
+    deploy_path: /var/python-project/amazon-spider
+    rsync:
+      timeout: 300
+      exclude:
+        - .env
+        - .git
+      exclude_from:
+      include:
+      include_from:
+      delete: false
+    share:
+      dirs:
+      files:
+        - .env
+    writable:
+      mode: acl
+      recursive: true
+      dirs:
+      files:
+    remove:
+      dirs:
+      files:
+    docker:
+      container: amazon-splider
+
+
 production:
   project: python
   hosts:
@@ -10,7 +48,7 @@ production:
     debug: true
     from: ./
     keep_releases: 5
-    deploy_path: /var/www/html/cpa/backend
+    deploy_path: /var/python-project/amazon-spider
     rsync:
       timeout: 300
       exclude:
@@ -21,7 +59,6 @@ production:
       delete: false
     share:
       dirs:
-        - storage
       files:
         - .env
     writable:
