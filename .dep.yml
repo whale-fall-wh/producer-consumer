@@ -35,7 +35,6 @@ develop:
     docker:
       container: amazon-splider
 
-
 production:
   project: python
   hosts:
