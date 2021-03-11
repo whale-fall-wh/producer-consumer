@@ -9,6 +9,7 @@ from utils.BDApi import ImgApi
 
 
 class Captcha:
+    """amazon验证码"""
     params = {'amzn': '', 'amzn-r': '', 'field-keywords': '', }
     url = ''
     img_url = ''
@@ -20,7 +21,7 @@ class Captcha:
         self.base_url = base_url
         self.get_params()
         self.get_url()
-        self.validate()
+        self.response = self.validate()
 
     def get_url(self):
         """
@@ -38,19 +39,20 @@ class Captcha:
             self.img_url = img_url[0]
             path = self.save_img()
             self.params['field-keywords'] = ImgApi(path=path).code
-            Logger().debug("图片地址: {}， 识别厚的验证码：{}".format(path, self.params['field-keywords']))
+            Logger().debug("图片地址: {}， 识别出的验证码：{}".format(path, self.params['field-keywords']))
 
     def validate(self):
         rs = self.http.get(self.url, params=self.params)
         Logger().debug(rs.cookies)
 
+        return rs
+
     def save_img(self):
+        # 保存图片，可以抽出来，封装
         html = self.http.get(self.img_url)
         img_name = self.img_path.format(str(hash(self.img_url)) + '.jpg')
         with open(img_name, 'wb') as file:  # 以byte形式将图片数据写入
             file.write(html.content)
             file.flush()
-        file.close()  # 关闭文件
 
         return img_name
-

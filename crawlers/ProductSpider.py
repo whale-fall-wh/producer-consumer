@@ -10,7 +10,7 @@ from crawlers.BaseAmazonSpider import BaseAmazonSpider
 
 
 class ProductCrawler(BaseAmazonSpider):
-    base_url = 'https://www.amazon.com/dp/{}'
+    base_url = 'https://www.amazon.com/dp/{}'   # 亚马逊产品地址
 
     def __init__(self, asin: str, http: Http):
         self.asin = asin

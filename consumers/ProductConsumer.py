@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from crawlers.ProductSpilder import ProductCrawler
+from crawlers.ProductSpider import ProductCrawler
 from utils.Logger import Logger
 from utils.Http import Http
 import common
@@ -30,5 +30,5 @@ class ProductConsumer(BaseConsumer):
 
 if __name__ == '__main__':
     t = ProductConsumer()
-    t.setDaemon(False)  # 非守护进程，主线程结束任务之后，会等待线程结束
+    t.setDaemon(False)  # 非守护进程，主线程结束任务之后，会等待线程结束，注意任务是死循环
     t.start()

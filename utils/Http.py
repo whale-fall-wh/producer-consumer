@@ -8,10 +8,11 @@ from utils.Logger import Logger
 
 
 class Proxy:
+    """代理"""
     proxy = None
 
     def __init__(self):
-        proxy_type = config('PROXY_TYPE')
+        proxy_type = config('PROXY_TYPE', '')
         if proxy_type == 'tps':     # 隧道代理，或者直接是代理服务器IP
             self.proxy = {
                 'http': config('PROXY_SERVER_URL'),
@@ -21,6 +22,7 @@ class Proxy:
 
 
 class Http:
+    """简单封装"""
     http = None
     headers = dict()
 
@@ -30,7 +32,7 @@ class Http:
                                      '(KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36'
         self.http = requests.session()
         self.http.headers = self.headers
-        # self.http.proxies = Proxy().proxy
+        self.http.proxies = Proxy().proxy
 
     def get(self, url, **kwargs):
         return self.http.get(url=url, **kwargs)

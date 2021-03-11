@@ -22,6 +22,8 @@ develop:
       delete: false
     share:
       dirs:
+        - logs
+        - imgs
       files:
         - .env
     writable:
@@ -33,7 +35,7 @@ develop:
       dirs:
       files:
     docker:
-      container: amazon-splider
+      container: amazon-spider
 
 
 production:
@@ -58,7 +60,8 @@ production:
       include_from:
       delete: false
     share:
-      dirs:
+        - logs
+        - imgs
       files:
         - .env
     writable:
@@ -71,4 +74,4 @@ production:
       dirs:
       files:
     docker:
-      container: amazon-splider
+      container: amazon-spider

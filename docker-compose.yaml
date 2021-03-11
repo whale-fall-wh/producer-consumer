@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  amazon-splider:
-    container_name: amazon-splider
+  amazon-spider:
+    container_name: amazon-spider
     command: python main.py
     build:
       context: .

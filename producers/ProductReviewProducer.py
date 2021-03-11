@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 
 from producers.BaseProducer import BaseProducer
-import schedule
+from utils.Logger import Logger
 
 
 class ProductReviewProducer(BaseProducer):
     job_key = 'product_review_asin'  # 注意和消费者对应
+    every = 60   # 调度间隔，单位秒
 
     def __init__(self):
-        schedule.every(2).seconds.do(self.start)
         BaseProducer.__init__(self)
 
     def start(self):
-        pass
+        Logger().debug(self.__class__)

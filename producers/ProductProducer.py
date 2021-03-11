@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from producers.BaseProducer import BaseProducer
-import schedule
 
 
 class ProductProducer(BaseProducer):
@@ -10,7 +9,6 @@ class ProductProducer(BaseProducer):
     every = 1*60             # 每隔秒数投放任务
 
     def __init__(self):
-        schedule.every(self.every).seconds.do(self.start)
         BaseProducer.__init__(self)
 
     def start(self):
