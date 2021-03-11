@@ -3,7 +3,7 @@
 
 import logging
 import os
-import datetime
+import time
 from utils.Singleton import singleton
 
 
@@ -12,7 +12,7 @@ class Logger:
 
     def __init__(self):
         self.log_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/logs/'
-        self.log_filename = self.log_dir_path + datetime.date.today().strftime('%Y-%m-%d') + '.log'
+        self.log_filename = self.log_dir_path + time.strftime("%Y-%m-%d", time.localtime()) + '.log'
 
         self.logger = logging.getLogger(self.log_filename)
 
@@ -62,8 +62,9 @@ class Logger:
 
 
 if __name__ == '__main__':
-    Logger().debug('aaa')
-    Logger().info('aaa')
-    Logger().warning('aaa')
-    Logger().error('aaa')
-    Logger().critical('aaa')
+    logger = Logger()
+    logger.debug('1')
+    logger.info('2')
+    logger.warning('3')
+    logger.error('4')
+    logger.critical('5')

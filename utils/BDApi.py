@@ -7,6 +7,7 @@ import base64
 import requests
 from decouple import config
 from utils.Logger import Logger
+from utils.Redis import Redis
 
 
 class ImgApi:
@@ -44,14 +45,21 @@ class ImgApi:
 
     def get_token(self):
         try:
+            self.access_token = Redis().db.get('baidu_api:access_token')
+            if self.access_token:
+                return
+        except:
+            pass
+        try:
             response = self.http.get(self.token_url.format(config('BAIDU_CLIENT_ID'), config('BAIDU_CLIENT_SECRET')))
             if response:
                 self.access_token = response.json().get('access_token')
+                Redis().db.set('baidu_api:access_token', self.access_token, 24*60*60)
                 Logger().debug(self.access_token)
         except:
             return None
 
 
 if __name__ == '__main__':
-    code = ImgApi('/Users/wanghua/PycharmProjects/amazon/imgs/-1524743121808585530.jpg').code
+    code = ImgApi('/Users/wanghua/PycharmProjects/amazon/imgs/1.jpg').code
     Logger().debug(code)

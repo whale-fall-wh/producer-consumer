@@ -7,7 +7,7 @@ import schedule
 
 class ProductProducer(BaseProducer):
     job_key = 'product_asin'    # 注意和消费者对应，可以抽出一个文件单独存放类
-    every = 1*60*60             # 每隔秒数投放任务
+    every = 1*60             # 每隔秒数投放任务
 
     def __init__(self):
         schedule.every(self.every).seconds.do(self.start)
