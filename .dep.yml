@@ -22,8 +22,7 @@ develop:
       delete: false
     share:
       dirs:
-        - logs
-        - imgs
+        - storage
       files:
         - .env
     writable:
@@ -60,8 +59,7 @@ production:
       include_from:
       delete: false
     share:
-        - logs
-        - imgs
+        - storage
       files:
         - .env
     writable:
