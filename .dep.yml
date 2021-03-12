@@ -53,7 +53,8 @@ production:
     rsync:
       timeout: 300
       exclude:
-
+        - .env
+        - .git
       exclude_from:
       include:
       include_from:
