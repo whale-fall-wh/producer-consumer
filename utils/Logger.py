@@ -15,7 +15,7 @@ class Logger:
     """
     def __init__(self):
         # 日志输出目录、文件
-        self.log_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/logs/'
+        self.log_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/storage/logs/'
         self.log_filename = self.log_dir_path + time.strftime("%Y-%m-%d", time.localtime()) + '.log'
         self.logger = logging.getLogger(self.log_filename)
         self.logger.setLevel(logging.DEBUG)

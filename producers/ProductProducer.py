@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from producers.BaseProducer import BaseProducer
+from utils.Logger import Logger
 
 
 class ProductProducer(BaseProducer):
@@ -13,6 +14,7 @@ class ProductProducer(BaseProducer):
 
     def start(self):
         # mysql 获取asin，并塞进redis队列
+        Logger().info('product 开始投放任务, 本次添加{}个任务' .format(10))
         asin_map = [
             'B01NAWKYZ0',
             'B07214SKYV',
@@ -30,4 +32,3 @@ class ProductProducer(BaseProducer):
         ]
         for asin_str in asin_map:
             self.set_job(asin_str)
-

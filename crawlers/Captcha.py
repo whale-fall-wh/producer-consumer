@@ -13,7 +13,7 @@ class Captcha:
     params = {'amzn': '', 'amzn-r': '', 'field-keywords': '', }
     url = ''
     img_url = ''
-    img_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/imgs/{}'
+    img_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/storage/imgs/{}'
 
     def __init__(self, base_url: str, html: str, http: Http):
         self.http = http

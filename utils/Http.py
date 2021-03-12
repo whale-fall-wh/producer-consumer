@@ -5,20 +5,31 @@ import requests
 from fake_useragent import UserAgent
 from decouple import config
 from utils.Logger import Logger
+import proxies
 
 
 class Proxy:
     """代理"""
+    proxy_engine = config('PROXY_ENGINE', '')
     proxy = None
+    proxy_class = None
 
     def __init__(self):
-        proxy_type = config('PROXY_TYPE', '')
-        if proxy_type == 'tps':     # 隧道代理，或者直接是代理服务器IP
+        self.proxy_class = self.__init_proxy_class()
+        if self.proxy_class:
             self.proxy = {
-                'http': config('PROXY_SERVER_URL'),
-                'https': config('PROXY_SERVER_URL')
+                'http': self.proxy_class.proxy_ip,
+                'https': self.proxy_class.proxy_ip
             }
+
         Logger().debug(self.proxy)
+
+    def __init_proxy_class(self):
+        for proxy_class in proxies.proxies:
+            if proxy_class.proxy_engine == self.proxy_engine:
+                return proxy_class()
+
+        return None
 
 
 class Http:
@@ -26,13 +37,14 @@ class Http:
     http = None
     headers = dict()
 
-    def __init__(self):
+    def __init__(self, is_proxy=True):
         # self.headers['user-agent'] = UserAgent(verify_ssl=False).random
         self.headers['user-agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' \
                                      '(KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36'
         self.http = requests.session()
         self.http.headers = self.headers
-        self.http.proxies = Proxy().proxy
+        if is_proxy:
+            self.http.proxies = Proxy().proxy
 
     def get(self, url, **kwargs):
         return self.http.get(url=url, **kwargs)
@@ -56,3 +68,8 @@ class Http:
 
     def add_header(self, key: str, value: str):
         self.headers[key] = value
+
+
+if __name__ == '__main__':
+    re = Http().get('https://www.amazon.com')
+    print(re.text)
