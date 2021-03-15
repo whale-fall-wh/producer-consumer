@@ -5,8 +5,9 @@ import common
 from utils.Logger import Logger
 from utils.Http import Http
 import requests
-from crawlers.elements.ProductTitle import get_title
-from crawlers.BaseAmazonSpider import BaseAmazonSpider
+from app.crawlers.elements.ProductTitle import get_title
+from app.crawlers.BaseAmazonSpider import BaseAmazonSpider
+from app.exceptions.SpiderErrorException import SpiderErrorException
 
 
 class ProductCrawler(BaseAmazonSpider):
@@ -20,15 +21,14 @@ class ProductCrawler(BaseAmazonSpider):
     def run(self):
         try:
             Logger().debug('开始抓取{}产品，地址 {}'.format(self.asin, self.url))
-            rs = self.get(url=self.url, timeout=10)
+            rs = self.get(url=self.url)
             title = get_title(rs.text)
             if title:
                 Logger().info(title)
             else:
                 Logger().error(self.asin + '抓取失败，' + '地址 ' + self.url)
         except requests.exceptions.RequestException:
-            Logger().error(self.url + '超时')
-            # 超时异常处理, 切换代理，并将任务重新放回队列
+            raise SpiderErrorException(self.url + '超时')
 
 
 if __name__ == '__main__':

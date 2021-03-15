@@ -1,7 +1,8 @@
-from proxies.BaseProxy import BaseProxy
+from app.proxies.BaseProxy import BaseProxy
 import os
 import random
 from utils.Logger import Logger
+import settings
 
 
 class LuminatiStaticEngine(BaseProxy):
@@ -9,10 +10,11 @@ class LuminatiStaticEngine(BaseProxy):
     proxy_engine = 'luminati_static'
 
     def __init__(self):
-        self.ip_file = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/storage/proxies/ips-static.txt'
+        self.ip_file = settings.STORAGE_PATH + '/proxies/ips-static.txt'
         BaseProxy.__init__(self)
 
     def get_proxy(self):
+        print(self.ip_file)
         ip = ''
         if os.path.exists(self.ip_file):
             with open(self.ip_file, 'r') as f:

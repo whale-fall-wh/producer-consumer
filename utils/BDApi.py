@@ -61,7 +61,6 @@ class ImgApi:
             token_url = 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=' \
                         '{}&client_secret={}'
             response = self.http.get(token_url.format(self.client_id, self.client_secret))
-            print(response.json())
             if response:
                 self.access_token = response.json().get('access_token')
                 Redis().db.set('baidu_api:access_token', self.access_token, 24*60*60)   # 一天有效，30天内都行

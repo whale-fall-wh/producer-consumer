@@ -4,7 +4,7 @@
 from utils.Http import Http
 from lxml import etree
 from utils.Logger import Logger
-import os
+import settings
 from utils.BDApi import ImgApi
 
 
@@ -13,7 +13,7 @@ class Captcha:
     params = {'amzn': '', 'amzn-r': '', 'field-keywords': '', }
     url = ''
     img_url = ''
-    img_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/storage/imgs/{}'
+    img_path = settings.STORAGE_PATH + '/imgs/{}'
 
     def __init__(self, base_url: str, html: str, http: Http):
         self.http = http

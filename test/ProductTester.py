@@ -1,5 +1,5 @@
 from utils.Http import Http
-from crawlers.Captcha import Captcha
+from app.crawlers.Captcha import Captcha
 
 http = Http()
 rs = http.get('https://www.amazon.com/dp/B07214SKYV')

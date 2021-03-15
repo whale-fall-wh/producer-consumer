@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from producers.BaseProducer import BaseProducer
+from app.producers import BaseProducer
 from utils.Logger import Logger
 
 

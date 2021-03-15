@@ -3,8 +3,8 @@
 
 import schedule
 import time
-import consumers
-import producers
+import os
+from app import consumers, producers
 
 
 class Producer:

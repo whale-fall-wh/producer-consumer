@@ -12,7 +12,3 @@ class LoadModules:
                 if inspect.isclass(value) and issubclass(value, base_model) and not getattr(value, 'ignore', False) \
                         and value is not base_model:
                     self.modules.append(value)
-
-    def yield_module(self):
-        for module in self.modules:
-            yield module
