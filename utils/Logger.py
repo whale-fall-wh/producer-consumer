@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from logging.handlers import TimedRotatingFileHandler
 import settings
-import time
 from utils.Singleton import singleton
 
 
@@ -11,12 +11,11 @@ from utils.Singleton import singleton
 class Logger:
     """
     日志-控制台打印所有日志，文件记录info级别以上日志
-    TODO: 单例导致输出到文件时不能按照日期切换文件
     """
     def __init__(self):
         # 日志输出目录、文件
         self.log_dir_path = settings.STORAGE_PATH + '/logs/'
-        self.log_filename = self.log_dir_path + time.strftime("%Y-%m-%d", time.localtime()) + '.log'
+        self.log_filename = self.log_dir_path + 'logs'
         self.logger = logging.getLogger(self.log_filename)
         self.logger.setLevel(logging.DEBUG)
 
@@ -25,10 +24,11 @@ class Logger:
         self.sh.setLevel(logging.DEBUG)
 
         # 输出INFO级别日志到文件
-        self.th = logging.FileHandler(self.log_filename, encoding='utf-8')
-        self.th.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s: %(message)s'))
-        self.th.setLevel(logging.INFO)
-        self.logger.addHandler(self.th)
+        self.tfh = TimedRotatingFileHandler(self.log_filename, when='midnight', backupCount=10, encoding='utf-8')
+        self.tfh.suffix = '%Y-%m-%d'
+        self.tfh.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s: %(message)s'))
+        self.tfh.setLevel(logging.INFO)
+        self.logger.addHandler(self.tfh)
 
     def __getattr__(self, key):
         def not_find(*args, **kwargs):
@@ -65,8 +65,8 @@ class Logger:
 
 if __name__ == '__main__':
     logger = Logger()
-    logger.debug('1')
+    # logger.debug('1')
     logger.info('2')
-    logger.warning('3')
-    logger.error('4')
-    logger.critical('5')
+    # logger.warning('3')
+    # logger.error('4')
+    # logger.critical('5')
