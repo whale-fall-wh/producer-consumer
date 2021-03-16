@@ -1,27 +1,30 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Author : wangHua
+# @Software: PyCharm
 
 from utils.Redis import Redis
+from abc import ABCMeta, abstractmethod
 import common
 import json
+from app.entities.BaseJobEntity import BaseJobEntity
 
 
-class BaseJob(object):
-    job_key = None
-    __job_name_key = 'job'
-    __retry_name_key = 'retry_time'
+class BaseJob(metaclass=ABCMeta):
 
     def __init__(self):
+        self.job_key = self.set_job_key()
         self.base_key = 'job:{}'
         self.redis = Redis().db
+
+    @abstractmethod
+    def set_job_key(self) -> str:
+        pass
 
     def __get_job_key(self):
         return self.base_key.format(self.job_key)
 
-    def get_job(self, job_dict: dict):
-        return job_dict.get(self.__job_name_key)
-
-    def get_job_obj(self):
+    def get_job_obj(self) -> dict:
         """
         获取任务
         :return: 任务字典
@@ -33,12 +36,14 @@ class BaseJob(object):
             common.sleep(5)
             self.get_job_obj()
 
-    def set_job(self, job):
-        job_dict = {self.__job_name_key: job, self.__retry_name_key: 0}
+    def set_job(self, job_entity: BaseJobEntity):
 
-        return self.redis.rpush(self.__get_job_key(), json.dumps(job_dict))
+        return self.redis.rpush(self.__get_job_key(), json.dumps(job_entity.to_dict()))
 
-    def set_error_job(self, job_dict: dict):
-        job_dict['retry_time'] = job_dict.get(self.__retry_name_key) + 1
+    def set_error_job(self, job_entity: BaseJobEntity):
+        if job_entity.retry_time >= 3:
+            return False
 
-        return self.redis.rpush(self.__get_job_key(), json.dumps(job_dict))
+        job_entity.retry_time += 1
+
+        return self.redis.rpush(self.__get_job_key(), json.dumps(job_entity.to_dict()))

@@ -1,3 +1,9 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time : 2021/3/16 1:01 下午
+# @Author : wangHua
+# @Software: PyCharm
+
 from abc import ABCMeta, abstractmethod
 from utils.DB import db
 
@@ -18,9 +24,11 @@ class BaseRepository(metaclass=ABCMeta):
 
     def show(self, model_id: int):
         with db.auto_commit_db():
-            return db.session.query(self.model).filter(self.model.id == model_id).first()
+            model = db.session.query(self.model).filter(self.model.id == model_id).first()
 
-    def all(self):
+        return model
+
+    def all(self) -> list:
         with db.auto_commit_db():
             return db.session.query(self.model).filter().all()
 

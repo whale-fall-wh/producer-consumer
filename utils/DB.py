@@ -1,5 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Time : 2021/3/15 5:05 下午
+# @Author : wangHua
+# @Software: PyCharm
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -47,8 +50,6 @@ class DB:
         except Exception as e:
             self.session.rollback()
             raise e
-        finally:
-            self.session.close()
 
 
 db = DB()

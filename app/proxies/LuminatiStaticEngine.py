@@ -1,3 +1,8 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Author : wangHua
+# @Software: PyCharm
+
 from app.proxies.BaseProxy import BaseProxy
 import os
 import random
@@ -14,7 +19,6 @@ class LuminatiStaticEngine(BaseProxy):
         BaseProxy.__init__(self)
 
     def get_proxy(self):
-        print(self.ip_file)
         ip = ''
         if os.path.exists(self.ip_file):
             with open(self.ip_file, 'r') as f:

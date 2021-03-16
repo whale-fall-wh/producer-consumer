@@ -1,44 +1,40 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Author : wangHua
+# @Software: PyCharm
 
-import common
 from utils.Logger import Logger
 from utils.Http import Http
 import requests
 from app.crawlers.elements.ProductTitle import get_title
 from app.crawlers.BaseAmazonSpider import BaseAmazonSpider
 from app.exceptions.SpiderErrorException import SpiderErrorException
+from app.entities.ProductJobEntity import ProductJobEntity
+from app.repositories.ProductItemRepository import ProductItemRepository
 
 
 class ProductCrawler(BaseAmazonSpider):
-    base_url = 'https://www.amazon.com/dp/{}'   # 亚马逊产品地址
 
-    def __init__(self, asin: str, http: Http):
-        self.asin = asin
-        self.url = self.base_url.format(self.asin)
-        BaseAmazonSpider.__init__(self, http=http)
+    def __init__(self, job_entity: ProductJobEntity, http: Http):
+        self.product_item_repository = ProductItemRepository()
+        self.base_url = '{}/dp/{}'   # 亚马逊产品地址
+        self.job_entity = job_entity
+        self.product_item = self.product_item_repository.show(self.job_entity.product_item_id)
+        self.product = self.product_item.product
+        self.site = self.product_item.site
+
+        if self.product_item and self.product_item.product and self.product_item.site:
+            self.url = self.base_url.format(self.site.domain, self.product.asin)
+            BaseAmazonSpider.__init__(self, http=http)
 
     def run(self):
         try:
-            Logger().debug('开始抓取{}产品，地址 {}'.format(self.asin, self.url))
+            Logger().debug('开始抓取{}产品，地址 {}'.format(self.product.asin, self.url))
             rs = self.get(url=self.url)
             title = get_title(rs.text)
             if title:
                 Logger().info(title)
             else:
-                Logger().error(self.asin + '抓取失败，' + '地址 ' + self.url)
+                Logger().error(self.product.asin + '抓取失败，' + '地址 ' + self.url)
         except requests.exceptions.RequestException:
             raise SpiderErrorException(self.url + '超时')
-
-
-if __name__ == '__main__':
-    asin_map = [
-        'B01NAWKYZ0',
-        'B01NAWKYZ0',
-        'B01NAWKYZ0',
-        'B01NAWKYZ0',
-    ]
-    new_http = Http()
-    for asin_str in asin_map:
-        ProductCrawler(asin_str, new_http)
-        common.sleep_random()

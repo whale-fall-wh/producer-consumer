@@ -1,5 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Time : 2021/3/8 5:05 下午
+# @Author : wangHua
+# @Software: PyCharm
 
 import logging
 from logging.handlers import TimedRotatingFileHandler
@@ -14,8 +17,7 @@ class Logger:
     """
     def __init__(self):
         # 日志输出目录、文件
-        self.log_dir_path = settings.STORAGE_PATH + '/logs/'
-        self.log_filename = self.log_dir_path + 'logs'
+        self.log_filename = settings.STORAGE_PATH + '/logs/logs'
         self.logger = logging.getLogger(self.log_filename)
         self.logger.setLevel(logging.DEBUG)
 
