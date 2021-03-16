@@ -1,9 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Time : 2021/3/8 4:05 下午
+# @Author : wangHua
+# @Software: PyCharm
 
 import schedule
 import time
-import os
 from app import consumers, producers
 
 

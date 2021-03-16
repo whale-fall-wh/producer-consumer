@@ -1,5 +1,9 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Time : 2021/3/10 3:025 下午
+# @Author : wangHua
+# @Software: PyCharm
+
 """
 百度API
 """

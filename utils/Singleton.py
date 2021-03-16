@@ -1,5 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Time : 2021/3/8 5:05 下午
+# @Author : wangHua
+# @Software: PyCharm
 
 
 def singleton(cls):
