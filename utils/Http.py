@@ -8,6 +8,7 @@ import requests
 from decouple import config
 from utils.Logger import Logger
 from app import proxies as proxy_pgk
+import datetime
 
 
 class Proxy:
@@ -21,7 +22,7 @@ class Proxy:
                 'http': self.proxy_class.proxy_ip,
                 'https': self.proxy_class.proxy_ip
             }
-            Logger().debug('已经获取到的代理: {}'.format(self.proxy.__str__()))
+            Logger().info('已经获取到的代理: {}'.format(self.proxy.__str__()))
         else:
             self.proxy = None
             Logger().warning('未获取到的代理')
@@ -51,20 +52,21 @@ class ErrorHttp:
 
 class Http(ErrorHttp):
     """简单封装"""
-    default_header = {}
+    default_header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
+                                    '(KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'}
 
-    def __init__(self, use_proxy=True):
+    def __init__(self, use_proxy: bool = True, is_http2: bool = False):
         ErrorHttp.__init__(self)
+        self.is_http2 = is_http2
         self.http = requests.session()
         self.http.headers = self.default_header
-        self.http.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' \
-                                          ' (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'
+        self.http.headers[''] = ''
         self.use_proxy = use_proxy
         self.set_proxy()
 
     def request(self, method, url,
                 params=None, data=None, headers=None, cookies=None, files=None,
-                auth=None, timeout=(10, 30), allow_redirects=True, proxies=None,
+                auth=None, timeout=(10, 20), allow_redirects=True, proxies=None,
                 hooks=None, stream=None, verify=None, cert=None, json=None):
 
         return self.http.request(method, url,

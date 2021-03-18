@@ -18,7 +18,7 @@ class ProductJobEntity(BaseJobEntity):
 
 
 if __name__ == '__main__':
-    entity = ProductJobEntity.instance({'product_asin': 'aaa', 'product_id': 111})
-    print(entity.to_dict())
-    entity = ProductJobEntity.instance({'asin': 'bbb', 'aaa': 'bbb'})
-    print(entity.to_dict())
+    a = ProductJobEntity.instance({'product_asin': 'aaa', 'product_id': 111})
+    b = ProductJobEntity.instance({'product_asin': 'bbb', 'product_id': 222})
+    print(a.to_dict())
+    print(b.to_dict())

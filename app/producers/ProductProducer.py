@@ -11,7 +11,7 @@ from app.enums.RedisListKeyEnum import RedisListKeyEnum
 
 
 class ProductProducer(BaseProducer):
-    every = 1*60             # 每隔秒数投放任务
+    every = 24*60*60             # 每隔秒数投放任务
 
     def __init__(self):
         self.job_count = 0
