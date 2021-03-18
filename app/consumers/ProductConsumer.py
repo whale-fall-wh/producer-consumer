@@ -13,7 +13,6 @@ from app.exceptions.CrawlErrorException import CrawlErrorException
 from app.exceptions.NotFoundException import NotFoundException
 from app.enums.RedisListKeyEnum import RedisListKeyEnum
 from app.entities.ProductJobEntity import ProductJobEntity
-from hyper.contrib import HTTP20Adapter
 
 
 class ProductConsumer(BaseConsumer):
