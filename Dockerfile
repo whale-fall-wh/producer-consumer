@@ -12,4 +12,8 @@ WORKDIR /app
 
 RUN apk --no-cache add gcc libc-dev libxml2-dev libxslt-dev
 
+RUN if [ ${CHANGE_SOURCE} = true ]; then \
+  pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple \
+;fi
+
 RUN pip install -r requirements.txt
