@@ -60,6 +60,7 @@ production:
       include_from:
       delete: false
     share:
+      dirs:
         - storage
       files:
         - .env
