@@ -62,7 +62,7 @@ class ProductElement(BaseElement):
         if not matches:
             return None
 
-        available_date = matches[0].strip()
+        available_date = ''.join(matches[0].replace(':', '').strip().split('   ')[:1]).strip()
 
         return available_date
 
@@ -97,3 +97,7 @@ class ProductElement(BaseElement):
     @staticmethod
     def deal_re_pattern(classify_rank_config):
         return classify_rank_config[1: len(classify_rank_config)-2]
+
+if __name__ == '__main__':
+    string = ':                    18 novembre 2019                                                                                                                                                                                                                                           ASIN                    :                    B07YYTK793                                                            Categoria                    :                    Uomo                                                                                                                                                                               Posizione nella classifica Bestseller di Amazon: n. 8.239 in Abbigliamento (Visualizza i Top 100 nella categoria Abbigliamento)         n.115    in Calze sportive da uomo                                                           Recensioni dei clienti:                                                                                                                                                                                                                            4,3 su 5 stelle                                                                                                                             779 voti'
+    print(''.join(string.replace(':', '').strip().split('   ')[:1]).strip())
