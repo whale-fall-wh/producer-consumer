@@ -7,7 +7,7 @@ from app.crawlers.elements.BaseElement import BaseElement
 from app.entities.SiteConfigEntity import SiteConfigEntity
 import re
 import html
-from common import replace_multi
+from common import replace_multi, str2int
 from app.translates import get_translate_by_locale
 from utils.Logger import Logger
 
@@ -105,7 +105,8 @@ class ProductElement(BaseElement):
         return classify_rank_config[1: len(classify_rank_config)-2]
 
     def __deal_with_rank(self, ranks: list):
-        splits = self.site_config.product_rank_split
+        splits = self.site_config.product_rank_replace
+        replace = self.site_config.product_rank_replace
         if type(splits) == str:
             splits = [splits]
         rs = dict()
@@ -113,7 +114,7 @@ class ProductElement(BaseElement):
             for split in splits:
                 item = rank.split(split)
                 if len(item) == 2:
-                    rank_num = int(replace_multi(item[0], splits, ''))
+                    rank_num = str2int(replace_multi(item[0], replace, ''))
                     if rank_num:
                         rs[item[1].strip()] = rank_num
 

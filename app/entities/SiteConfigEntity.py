@@ -24,6 +24,7 @@ class SiteConfigEntity(BaseEntity):
     ]
 
     product_classify_rank = []
+    product_rank_replace = []
     product_available_date = []
     product_rank_split = None
     product_available_date_format = None
@@ -37,6 +38,7 @@ class SiteConfigEntity(BaseEntity):
         self.product_classify_rank = data.get('product', {}).get('classify_rank', [])
         self.product_available_date = data.get('product', {}).get('available_date', [])
         self.product_rank_split = data.get('product', {}).get('rank_split', [])
+        self.product_rank_replace = data.get('product', {}).get('rank_replace', [])
         self.product_available_date_format = data.get('product', {}).get('rank_split', [])
         self.product_available_date_locale = data.get('product', {}).get('rank_split', '')
         self.has_en_translate = data.get('product', {}).get('has_en_translate', '')
