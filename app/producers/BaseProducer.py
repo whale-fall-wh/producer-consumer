@@ -13,8 +13,12 @@ class BaseProducer(BaseJob, metaclass=ABCMeta):
 
     def __init__(self):
         BaseJob.__init__(self)
-        schedule.every(self.every).seconds.do(self.start)
+        self.schedule = schedule
+        self._schedule()
 
     @abstractmethod
     def start(self):
         pass
+
+    def _schedule(self):
+        self.schedule.every(self.every).seconds.do(self.start)

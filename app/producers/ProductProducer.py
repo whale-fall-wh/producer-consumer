@@ -37,6 +37,9 @@ class ProductProducer(BaseProducer):
                     self.job_count += 1
         Logger().info('product 开始投放任务, 本次添加{}个任务' .format(self.job_count))
 
+    def _schedule(self):
+        self.schedule.every().day.at('00:00').do(self.start)
+
 
 if __name__ == '__main__':
     ProductProducer().start()
