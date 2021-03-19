@@ -10,10 +10,11 @@ import datetime
 
 
 def func():
-    locale.setlocale(locale.LC_ALL, 'it_IT')
-    rule = '%d %b %Y'
-    format_time = datetime.datetime.strptime("1 set 2020", rule)
-    print("formattime -->{}".format(format_time))
+    locale.setlocale(locale.LC_ALL, 'en_US')
+    rule = '%B %d, %Y'
+    format_time = datetime.datetime.strptime("October 18, 2019", rule)
+    # format_time = datetime.datetime.strptime("1 set 2020", rule)
+    print(format_time.strftime('%Y-%m-%d'))
     locale.resetlocale()
 
 

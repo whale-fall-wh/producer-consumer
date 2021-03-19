@@ -9,6 +9,7 @@ from .BaseEntity import BaseEntity
 
 
 class SiteConfigEntity(BaseEntity):
+    key = ''
     page_not_found = '//*[@id="g"]'     # 这个如果有其他页面也在使用id=g就有异常了，就会被判定成not_found
     validate_captcha = '//form[@action="/errors/validateCaptcha"]'
 
@@ -24,10 +25,20 @@ class SiteConfigEntity(BaseEntity):
 
     product_classify_rank = []
     product_available_date = []
+    product_rank_split = None
+    product_available_date_format = None
+    product_available_date_locale = None
+
+    has_en_translate = False
 
     def to_object(self, data: dict):
         # TODO: 通过映射关系来实现
+        self.key = data.get('product', {}).get('available_date_locale', '')
         self.product_classify_rank = data.get('product', {}).get('classify_rank', [])
         self.product_available_date = data.get('product', {}).get('available_date', [])
+        self.product_rank_split = data.get('product', {}).get('rank_split', [])
+        self.product_available_date_format = data.get('product', {}).get('rank_split', [])
+        self.product_available_date_locale = data.get('product', {}).get('rank_split', '')
+        self.has_en_translate = data.get('product', {}).get('has_en_translate', '')
 
         return self

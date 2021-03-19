@@ -14,3 +14,12 @@ def sleep_random():
 
 def sleep(secs: float):
     time.sleep(secs)
+
+
+def replace_multi(string: str, search, replace: str):
+    if type(search) == list:
+        for search_item in search:
+            string = replace_multi(string, search_item, replace)
+        return string
+
+    return string.replace(search, replace)
