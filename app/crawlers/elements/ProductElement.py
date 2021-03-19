@@ -117,5 +117,6 @@ class ProductElement(BaseElement):
                     rank_num = str2int(replace_multi(item[0], replace, ''))
                     if rank_num:
                         rs[item[1].strip()] = rank_num
+                    break
 
         return rs
