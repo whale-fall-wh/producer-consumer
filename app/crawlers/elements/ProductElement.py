@@ -50,7 +50,21 @@ class ProductElement(BaseElement):
         return ranks
 
     def get_element_available_date(self):
-        return ''
+        product_str = self.__get_product_detail_str()
+        if not product_str:
+            return None
+
+        matches = []
+        for product_available_date in self.site_config.product_available_date:
+            matches = re.findall(self.deal_re_pattern(product_available_date), product_str)
+            if matches:
+                break
+        if not matches:
+            return None
+
+        available_date = matches[0].strip()
+
+        return available_date
 
     def get_element_feature_rate(self):
         # 异步接口

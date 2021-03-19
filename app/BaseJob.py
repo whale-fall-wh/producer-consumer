@@ -29,12 +29,11 @@ class BaseJob(metaclass=ABCMeta):
         获取任务
         :return: 任务字典
         """
-        job_str = self.redis.lpop(self.__get_job_key())
-        if job_str:
-            return json.loads(job_str)
-        else:
-            common.sleep(5)
-            self.get_job_obj()
+        while True:
+            job_str = self.redis.lpop(self.__get_job_key())
+            if job_str:
+                return json.loads(job_str)
+            common.sleep(10)
 
     def set_job(self, job_entity: BaseJobEntity):
 

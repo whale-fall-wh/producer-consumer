@@ -5,7 +5,7 @@
 # @Software: PyCharm
 
 import schedule
-import re
+import sys
 import time
 from app import consumers, producers
 
@@ -25,6 +25,10 @@ class Producer:
             schedule.run_pending()
             time.sleep(1)
 
+    def run_all(self):
+        for producer in self.producers:
+            producer().start()
+
 
 class Consumer:
     """
@@ -42,5 +46,8 @@ class Consumer:
 
 
 if __name__ == '__main__':
+    argv = sys.argv[1:]
+    if 'run_all_producer' in argv:
+        Producer().run_all()
     Consumer().start()  # 多线程启动消费者
     Producer().start()
