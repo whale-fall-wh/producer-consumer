@@ -49,7 +49,7 @@ production:
     debug: true
     from: ./
     keep_releases: 5
-    deploy_path: /home/admin/python-project/amazon-spider
+    deploy_path: /home/ubuntu/python-project/amazon-spider
     rsync:
       timeout: 300
       exclude:
