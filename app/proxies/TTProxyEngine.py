@@ -15,6 +15,10 @@ import copy
 
 
 class TTProxy(BaseProxy):
+    """
+    仅海外可用
+    https://ttproxy.com/
+    """
     proxy_engine = 'tt_proxy'
     secret = config('PROXY_SECRET', '')
     key = config('PROXY_KEY', '')

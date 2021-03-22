@@ -11,6 +11,9 @@ import settings
 
 
 class LuminatiStaticEngine(BaseProxy):
+    """
+    https://luminati-china.biz/cp/zones
+    """
 
     proxy_engine = 'luminati_static'
 

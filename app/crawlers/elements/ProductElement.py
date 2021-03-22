@@ -53,7 +53,8 @@ class ProductElement(BaseElement):
             if rank:
                 ranks.append(rank)
 
-        return self.__deal_with_rank(ranks)
+        # return self.__deal_with_rank(ranks)
+        return ranks
 
     def get_element_available_date(self):
         product_str = self.__get_product_detail_str()

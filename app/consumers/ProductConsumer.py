@@ -7,6 +7,7 @@
 from app.crawlers.ProductCrawler import ProductCrawler
 from utils.Logger import Logger
 from utils.Http import Http
+from app.proxies import get_proxy_engine
 import common
 from app.consumers import BaseConsumer
 from app.exceptions.CrawlErrorException import CrawlErrorException
@@ -34,33 +35,28 @@ class ProductConsumer(BaseConsumer):
 
     def __init__(self):
         self.http = None
+        self.proxy_engine = None
         BaseConsumer.__init__(self)
 
     def set_job_key(self) -> str:
         return RedisListKeyEnum.product_crawl_job
 
-    def _check_proxy(self):
-        if self.http.continue_error_time >= 3:
-            self.http.continue_error_time = 0
-            self.http.set_proxy()
-
     def run(self):
         Logger().info('product_consumer start')
         # 要保持所有http请求在一个会话中，所以这边带参数传，对代理有要求，IP尽量少变化，变化后，http会话就没有意义了
         self.http = Http()
+        self.proxy_engine = get_proxy_engine()
         self.http.set_headers(self.headers)
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
-                # 检查是否需要切换代理，连续三次请求失败，则需要切换代理
-                self._check_proxy()
                 job_entity = ProductJobEntity.instance(job_dict)
                 try:
+                    # product 反扒比较苛刻，这边用了随机IP的代理
+                    self.http.set_proxy(self.proxy_engine.get_proxy())
                     ProductCrawler(job_entity, self.http)
-                    self.http.init_error_info()
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
-                    self.http.error_time_increase()
                     self.set_error_job(job_entity)
                 except NotFoundException:
                     # 页面不存在，不做处理

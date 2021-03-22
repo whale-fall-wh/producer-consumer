@@ -39,4 +39,4 @@ class ProductCrawler(BaseAmazonCrawler):
             else:
                 raise CrawlErrorException('页面请求异常, 地址 {}'.format(self.url))
         except requests.exceptions.RequestException:
-            raise CrawlErrorException(self.url + '超时')
+            raise CrawlErrorException(self.url + '请求异常')
