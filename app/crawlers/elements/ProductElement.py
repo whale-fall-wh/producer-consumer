@@ -69,8 +69,11 @@ class ProductElement(BaseElement):
             return None
 
         available_date = ''.join(matches[0].replace(':', '').strip().split('   ')[:1]).strip()
+        available_date = self.translate.available_date(available_date)
+        if available_date:
+            return available_date.strftime('%Y-%m-%d')
 
-        return self.translate.available_date(available_date)
+        return None
 
     def get_element_feature_rate(self):
         # 异步接口

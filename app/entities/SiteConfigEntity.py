@@ -41,6 +41,6 @@ class SiteConfigEntity(BaseEntity):
         self.product_rank_replace = data.get('product', {}).get('rank_replace', [])
         self.product_available_date_format = data.get('product', {}).get('rank_split', [])
         self.product_available_date_locale = data.get('product', {}).get('rank_split', '')
-        self.has_en_translate = data.get('product', {}).get('has_en_translate', '')
+        self.has_en_translate = data.get('has_en_translate', '')
 
         return self

@@ -43,7 +43,7 @@ class BaseAmazonCrawler(metaclass=ABCMeta):
 
         self.need_captcha_flag = exception.need_validate()
         if self.need_captcha_flag:
-            Captcha('https://www.amazon.com', http=self.http, html=rs.text)
+            Captcha(self.site.domain, http=self.http, html=rs.text)
             rs = self.http.request(method=method, url=url, **kwargs)
 
         return rs

@@ -29,22 +29,7 @@ def str2int(s):
     try:
         return int(s)
     except:
-        try:
-            if not s:
-                return 0
-            if '-' == s[0]:
-                return 0 - str2int(s[1:])
-            elif s[0] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-                num = 0
-                for i in range(len(s)):
-                    if s[i] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-                        num = num * 10 + int(s[i])
-                    else:
-                        return num
-            else:
-                return 0
-        except:
-            return 0
+        return 0
 
 
 if __name__ == '__main__':

@@ -29,13 +29,14 @@ class LuminatiStaticEngine(BaseProxy):
 
         return self.format_proxy(ip)
 
-    def __str__(self):
-        return self.proxy_ip
-
     @staticmethod
     def format_proxy(ip):
         if ip:
             ip, port, username, password = ip.strip().replace("\n", '').split(':')
-            return "http://{}:{}@{}:{}".format(username, password, ip, port)
+            proxy_ip = "http://{}:{}@{}:{}".format(username, password, ip, port)
+            return {
+                'http': proxy_ip,
+                'https': proxy_ip
+            }
 
-        return ip
+        return None

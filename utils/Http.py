@@ -7,32 +7,31 @@
 import requests
 from decouple import config
 from utils.Logger import Logger
+from functools import wraps
 from app import proxies as proxy_pgk
-import datetime
+from app.proxies.BaseProxy import BaseProxy
 
 
 class Proxy:
     """代理"""
     proxy_engine = config('PROXY_ENGINE', '')
 
-    def __init__(self):
-        self.proxy_class = self.__init_proxy_class()
-        if self.proxy_class and self.proxy_class.proxy_ip:
-            self.proxy = {
-                'http': self.proxy_class.proxy_ip,
-                'https': self.proxy_class.proxy_ip
-            }
-            Logger().info('已经获取到的代理: {}'.format(self.proxy.__str__()))
-        else:
-            self.proxy = None
-            Logger().warning('未获取到的代理')
-
-    def __init_proxy_class(self):
+    @staticmethod
+    def get_proxy_engine(proxy_engine) -> [BaseProxy, None]:
         for proxy_class in proxy_pgk.proxies:
-            if proxy_class.proxy_engine == self.proxy_engine:
+            if proxy_class.proxy_engine == proxy_engine:
                 return proxy_class()
 
         return None
+
+    @staticmethod
+    def log_proxy(f):
+        @wraps(f)
+        def log(*k, **kw):
+            r = f(*k, **kw)
+            Logger().debug(r)
+
+        return log
 
 
 class ErrorHttp:
@@ -60,8 +59,8 @@ class Http(ErrorHttp):
         self.is_http2 = is_http2
         self.http = requests.session()
         self.http.headers = self.default_header
-        self.http.headers[''] = ''
         self.use_proxy = use_proxy
+        self.proxy_engine = Proxy.get_proxy_engine(Proxy.proxy_engine)
         self.set_proxy()
 
     def request(self, method, url,
@@ -69,6 +68,7 @@ class Http(ErrorHttp):
                 auth=None, timeout=(10, 20), allow_redirects=True, proxies=None,
                 hooks=None, stream=None, verify=None, cert=None, json=None):
 
+        self.auto_change_proxy()
         return self.http.request(method, url,
                                  params, data, headers, cookies, files,
                                  auth, timeout, allow_redirects, proxies,
@@ -80,9 +80,19 @@ class Http(ErrorHttp):
 
         return not_find
 
+    @Proxy.log_proxy
+    def auto_change_proxy(self):
+        if self.proxy_engine and self.proxy_engine.get_every_request:
+            self.http.proxies = self.proxy_engine.get_proxy()
+
+        return self.http.proxies
+
+    @Proxy.log_proxy
     def set_proxy(self):
-        if self.use_proxy:
-            self.http.proxies = Proxy().proxy
+        if self.use_proxy and self.proxy_engine:
+            self.http.proxies = self.proxy_engine.get_proxy()
+
+        return self.http.proxies
 
     def set_headers(self, headers: dict):
         self.http.headers = headers

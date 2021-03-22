@@ -8,6 +8,7 @@ from lxml import etree
 from utils.Logger import Logger
 import settings
 from utils.BDApi import ImgApi
+import os
 
 
 class Captcha:
@@ -42,6 +43,7 @@ class Captcha:
             path = self.save_img()
             self.params['field-keywords'] = ImgApi(path=path).code
             Logger().debug("图片地址: {}， 识别出的验证码：{}".format(path, self.params['field-keywords']))
+            os.remove(path)
 
     def validate(self):
         rs = self.http.get(self.url, params=self.params)

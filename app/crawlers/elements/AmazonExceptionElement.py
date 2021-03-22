@@ -7,6 +7,7 @@
 
 from .BaseElement import BaseElement
 from app.entities.SiteConfigEntity import SiteConfigEntity
+import settings, time
 
 
 class AmazonExceptionElement(BaseElement):
@@ -22,5 +23,9 @@ class AmazonExceptionElement(BaseElement):
 
     def not_found(self) -> bool:
         element = self.html.xpath(self.site_config_entity.page_not_found)
+        if element:
+            path = settings.STORAGE_PATH
+            with open(path + '/logs/not_found.html', 'w') as f:
+                f.write(self.get_html(self.html))
 
         return bool(element)

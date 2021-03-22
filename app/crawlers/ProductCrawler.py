@@ -28,10 +28,12 @@ class ProductCrawler(BaseAmazonCrawler):
 
     def run(self):
         try:
+            if self.site_config_entity.has_en_translate:
+                self.url = self.url + '?language=en_US'
             Logger().debug('开始抓取{}产品，地址 {}'.format(self.product.asin, self.url))
             rs = self.get(url=self.url)
             product_element = ProductElement(content=rs.content, site_config=self.site_config_entity)
-            title = product_element.title
+            title = getattr(product_element, 'title')
             if title:
                 Logger().info(product_element.get_all_element())
             else:
