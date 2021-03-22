@@ -20,10 +20,19 @@ class BaseTranslate(metaclass=ABCMeta):
     def _init_locale(self):
         pass
 
-    @abstractmethod
     def _init_format(self):
         # https://www.runoob.com/python/att-time-strftime.html
-        pass
+        # 可以在子类重写，以满足其他格式
+        return [
+            "%d. %B %Y",  # 18. October 2019
+            "%d %B %Y",  # 18 October 2019
+            "%d %B, %Y",  # 18 October, 2019
+            '%B %d, %Y',  # October 18, 2019
+            "%d. %b %Y",  # 18. October 2019
+            "%d %b %Y",  # 18 October 2019
+            "%d %b, %Y",  # 18 October, 2019
+            '%b %d, %Y'  # October 18, 2019
+        ]
 
     @staticmethod
     def get_time_from_locale_format(time_str: str, time_format, time_locale):

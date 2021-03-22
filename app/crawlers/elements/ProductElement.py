@@ -46,8 +46,6 @@ class ProductElement(BaseElement):
                 break
         if not matches:
             return {}
-
-        Logger().debug(matches[0])
         ranks_tmp = [rank.strip() for rank in matches[0].strip().split('     ')]
         ranks = []
         for rank in ranks_tmp:
@@ -99,6 +97,7 @@ class ProductElement(BaseElement):
 
         product_html = re.sub('<\s*script[^>]*>[^<]*<\s*/\s*script\s*>', "", product_html)
         product_html = re.sub("<\s*style[^>]*>[^<]*<\s*/\s*style\s*>", "", product_html)
+        product_html = re.sub("<\s*a[^>]*>[^<]*<\s*/\s*a\s*>", "", product_html)
         product_html = re.sub("<[^>]*?>", "", product_html, flags=re.S)
         product_html = product_html.replace('\n', '     ').replace('\xa0', ' ').replace('\xc2', ' ')
 
@@ -111,20 +110,16 @@ class ProductElement(BaseElement):
     def __deal_with_rank(self, ranks: list):
         splits = self.site_config.product_rank_split
         replace = self.site_config.product_rank_replace
-        Logger().debug(ranks)
-        Logger().debug(splits)
-        Logger().debug(replace)
         if type(splits) == str:
             splits = [splits]
         rs = dict()
         for rank in ranks:
             for split in splits:
                 item = rank.split(split)
-                Logger().debug(item)
                 if len(item) == 2:
                     rank_num = str2int(replace_multi(item[0], replace, ''))
                     if rank_num:
-                        rs[item[1].strip()] = rank_num
+                        rs[item[1].replace('(', '').replace(')', '').strip()] = rank_num
                     break
 
         return rs

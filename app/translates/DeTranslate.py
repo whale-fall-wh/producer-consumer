@@ -1,15 +1,15 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time : 2021/3/19 10:54 上午 
+# @Time : 2021/3/22 1:17 下午 
 # @Author : wangHua
-# @File : ItTranslate.py 
+# @File : DeTranslate.py 
 # @Software: PyCharm
 
 from app.translates.BaseTranslate import BaseTranslate
 
 
-class ItTranslate(BaseTranslate):
-    key = 'it'
+class DeTranslate(BaseTranslate):
+    key = 'de'
 
     def _init_locale(self):
-        return 'it_IT'
+        return 'de_DE'

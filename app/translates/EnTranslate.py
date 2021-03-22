@@ -13,12 +13,3 @@ class EnTranslate(BaseTranslate):
 
     def _init_locale(self):
         return 'en_US'
-
-    def _init_format(self):
-
-        return [
-            "%d. %B %Y",    # 18. October 2019
-            "%d %B %Y",     # 18 October 2019
-            "%d %B, %Y",    # 18 October, 2019
-            '%B %d, %Y'     # October 18, 2019
-        ]
