@@ -54,7 +54,6 @@ class ProductElement(BaseElement):
                 ranks.append(rank)
 
         return self.__deal_with_rank(ranks)
-        # return ranks
 
     def get_element_available_date(self):
         product_str = self.__get_product_detail_str()
@@ -111,12 +110,16 @@ class ProductElement(BaseElement):
     def __deal_with_rank(self, ranks: list):
         splits = self.site_config.product_rank_split
         replace = self.site_config.product_rank_replace
+        Logger().debug(ranks)
+        Logger().debug(splits)
+        Logger().debug(replace)
         if type(splits) == str:
             splits = [splits]
         rs = dict()
         for rank in ranks:
             for split in splits:
                 item = rank.split(split)
+                Logger().debug(item)
                 if len(item) == 2:
                     rank_num = str2int(replace_multi(item[0], replace, ''))
                     if rank_num:
