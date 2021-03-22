@@ -52,8 +52,9 @@ class ProductConsumer(BaseConsumer):
             if job_dict:
                 job_entity = ProductJobEntity.instance(job_dict)
                 try:
-                    # product 反扒比较苛刻，这边用了随机IP的代理
-                    self.http.set_proxy(self.proxy_engine.get_proxy())
+                    if self.proxy_engine:
+                        # product 反扒比较苛刻，这边用了随机IP的代理
+                        self.http.set_proxy(self.proxy_engine.get_proxy())
                     ProductCrawler(job_entity, self.http)
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1

@@ -5,7 +5,7 @@
 
 from app.producers import BaseProducer
 from utils.Logger import Logger
-from app.repositories.ProductRepository import ProductRepository
+from app.repositories import ProductRepository
 from app.entities.ProductJobEntity import ProductJobEntity
 from app.enums.RedisListKeyEnum import RedisListKeyEnum
 

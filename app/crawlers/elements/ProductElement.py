@@ -7,7 +7,7 @@ from app.crawlers.elements.BaseElement import BaseElement
 from app.entities.SiteConfigEntity import SiteConfigEntity
 import re
 import html
-from common import replace_multi, str2int
+from common import replace_multi, str2int, str2float
 from app.translates import get_translate_by_locale
 from utils.Logger import Logger
 
@@ -30,9 +30,12 @@ class ProductElement(BaseElement):
         elements = self.html.xpath(self.site_config.product_price_xpath)
         return ''.join(elements).strip()
 
-    def get_element_rating(self) -> str:
+    def get_element_rating(self) -> float:
         elements = self.html.xpath(self.site_config.product_rating_xpath)
-        return ''.join(elements).strip()
+        if elements:
+            return self.__deal_with_rating(elements[0].strip())
+
+        return 0
 
     def get_element_classify_rank(self):
         product_str = self.__get_product_detail_str()
@@ -41,7 +44,7 @@ class ProductElement(BaseElement):
 
         matches = []
         for classify_rank_config in self.site_config.product_classify_rank:
-            matches = re.findall(self.deal_re_pattern(classify_rank_config), product_str)
+            matches = re.findall(self.__deal_re_pattern(classify_rank_config), product_str)
             if matches:
                 break
         if not matches:
@@ -61,7 +64,7 @@ class ProductElement(BaseElement):
 
         matches = []
         for product_available_date in self.site_config.product_available_date:
-            matches = re.findall(self.deal_re_pattern(product_available_date), product_str)
+            matches = re.findall(self.__deal_re_pattern(product_available_date), product_str)
             if matches:
                 break
         if not matches:
@@ -104,7 +107,7 @@ class ProductElement(BaseElement):
         return '---start---' + product_html + '---end---'
 
     @staticmethod
-    def deal_re_pattern(classify_rank_config):
+    def __deal_re_pattern(classify_rank_config):
         return classify_rank_config[1: len(classify_rank_config)-2]
 
     def __deal_with_rank(self, ranks: list):
@@ -123,3 +126,8 @@ class ProductElement(BaseElement):
                     break
 
         return rs
+
+    def __deal_with_rating(self, rating):
+
+        rating = replace_multi(rating, self.site_config.product_rating_split, '').strip()
+        return str2float(rating, 1)

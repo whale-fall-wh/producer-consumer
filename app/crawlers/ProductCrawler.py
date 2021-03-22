@@ -10,13 +10,17 @@ from app.crawlers.elements.ProductElement import ProductElement
 from app.crawlers.BaseAmazonCrawler import BaseAmazonCrawler
 from app.exceptions.CrawlErrorException import CrawlErrorException
 from app.entities.ProductJobEntity import ProductJobEntity
-from app.repositories.ProductItemRepository import ProductItemRepository
+from app.repositories import ProductItemRepository, ProductRepository
+from app.services import ProductService
+from copy import deepcopy
 
 
 class ProductCrawler(BaseAmazonCrawler):
 
     def __init__(self, job_entity: ProductJobEntity, http: Http):
         self.product_item_repository = ProductItemRepository()
+        self.product_repository = ProductRepository()
+        self.product_service = ProductService()
         self.base_url = '{}/dp/{}'   # 亚马逊产品地址
         self.job_entity = job_entity
         self.product_item = self.product_item_repository.show(self.job_entity.product_item_id)
@@ -35,8 +39,40 @@ class ProductCrawler(BaseAmazonCrawler):
             product_element = ProductElement(content=rs.content, site_config=self.site_config_entity)
             title = getattr(product_element, 'title')
             if title:
-                Logger().info(product_element.get_all_element())
+                data = product_element.get_all_element()
+                Logger().info(data)
+                no_empty_data = dict()
+                for k, v in data.items():
+                    if v:
+                        no_empty_data[k] = v
+                self.save_data(no_empty_data)
+
             else:
                 raise CrawlErrorException('页面请求异常, 地址 {}'.format(self.url))
         except requests.exceptions.RequestException:
             raise CrawlErrorException(self.url + '请求异常')
+
+    def save_data(self, no_empty_data: dict):
+        rating = no_empty_data.get('rating', 0.0)
+        available_date = no_empty_data.get('available_date', None)
+        price = no_empty_data.get('price', '')
+        feature_rate = no_empty_data.get('feature_rate', {})
+        classify_rank = no_empty_data.get('classify_rank', {})
+        product_dict = {}
+        if rating:
+            product_dict['rating'] = rating
+        if available_date:
+            product_dict['available_date'] = available_date
+        if self.product:
+            self.product_repository.update(self.product.id, product_dict)
+        if self.product_item:
+            product_item_dict = deepcopy(product_dict)
+            if price:
+                product_item_dict['price'] = price
+            if feature_rate:
+                product_item_dict['feature_rate'] = feature_rate
+            if classify_rank:
+                product_item_dict['classify_rank'] = classify_rank
+            self.product_item_repository.update(self.product_item.id, product_item_dict)
+
+        self.product_service.update_product_item_daily_rank(self.product_item, ranks=classify_rank)

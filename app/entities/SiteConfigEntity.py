@@ -15,7 +15,7 @@ class SiteConfigEntity(BaseEntity):
 
     product_title_xpath = '//*[@id="productTitle"]/text()'
     product_price_xpath = '//*[@id="priceblock_ourprice"]/text()'
-    product_rating_xpath = '//span[@data-hook="rating-out-of-text"]/text()'
+    product_rating_xpath = '//*[@id="acrPopover"]/@title'
     product_detail_xpath = [
         '//*[@id="prodDetails"]',
         '//*[@id="detailBulletsWrapper_feature_div"]',
@@ -27,6 +27,7 @@ class SiteConfigEntity(BaseEntity):
     product_rank_replace = []
     product_available_date = []
     product_rank_split = None
+    product_rating_split = None
     product_available_date_format = None
     product_available_date_locale = None
 
@@ -42,5 +43,6 @@ class SiteConfigEntity(BaseEntity):
         self.product_available_date_format = data.get('product', {}).get('rank_split', [])
         self.product_available_date_locale = data.get('product', {}).get('rank_split', '')
         self.has_en_translate = data.get('has_en_translate', '')
+        self.product_rating_split = data.get('product', {}).get('rating_split', [])
 
         return self

@@ -32,5 +32,13 @@ def str2int(s):
         return 0
 
 
+def str2float(s, d=1) -> float:
+    try:
+        s = float(s)
+        return round(s, d)
+    except:
+        return 0.0
+
+
 if __name__ == '__main__':
-    str2int('')
+    print(str2float('5.5222'))

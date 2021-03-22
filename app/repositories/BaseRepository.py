@@ -35,14 +35,11 @@ class BaseRepository(metaclass=ABCMeta):
     def store(self):
         pass
 
-    def update(self):
-        pass
-
     def destroy(self):
         pass
 
     def __getattr__(self, key):
         def not_find(*args, **kwargs):
-            return getattr(self.logger, key)(*args, **kwargs)
+            return getattr(self.model, key)(*args, **kwargs)
 
         return not_find
