@@ -48,7 +48,7 @@ class ProductElement(BaseElement):
             return {}
 
         Logger().debug(matches[0])
-        ranks_tmp = [rank.strip() for rank in matches[0].strip().split('   ')]
+        ranks_tmp = [rank.strip() for rank in matches[0].strip().split('     ')]
         ranks = []
         for rank in ranks_tmp:
             if rank:
