@@ -24,7 +24,7 @@ class DB:
         self.engine = create_engine(CONNECTION_STR)
         # model需要继承的基类:
         self.Model = declarative_base()
-        self.session = self.create_session()
+        self.session = sessionmaker(bind=self.engine)()
         self.Column = Column
         self.Integer = Integer
         self.BigInt = mysql.BIGINT
@@ -36,11 +36,6 @@ class DB:
         self.Text = Text
         self.ForeignKey = ForeignKey
         self.JSON = JSON
-
-    def create_session(self):
-        self.session = sessionmaker(bind=self.engine)()
-
-        return self.session
 
     @contextmanager
     def auto_commit_db(self):

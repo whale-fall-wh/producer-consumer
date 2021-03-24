@@ -11,6 +11,15 @@ from sqlalchemy.orm import relationship
 class BaseModel(db.Model):
     __abstract__ = True
 
+    def __repr__(self):
+        return self.__dict__.__str__()
+
+    def update(self, attributes: dict):
+        with db.auto_commit_db():
+            if attributes:
+                for k, v in attributes.items():
+                    setattr(self, k, v)
+
     @classmethod
     def create(cls, attributes):
         with db.auto_commit_db():
@@ -20,7 +29,7 @@ class BaseModel(db.Model):
         return model
 
     @classmethod
-    def update(cls, model_id: int, data: dict):
+    def update_by_id(cls, model_id: int, data: dict):
         with db.auto_commit_db():
             return db.session.query(cls).filter(cls.id == model_id).update(data)
 
@@ -39,6 +48,60 @@ class BaseModel(db.Model):
                 db.session.add(model)
 
             return model
+
+
+product_type_product_relations = Table(
+    "product_type_product_relations",
+    db.Model.metadata,
+    db.Column("product_id", db.BigInt(unsigned=True), db.ForeignKey("products.id"), nullable=False, primary_key=True),
+    db.Column("product_type_id", db.BigInt(unsigned=True), db.ForeignKey("product_types.id"),
+              nullable=False, primary_key=True),
+    db.Column("created_at", db.DateTime, default=func.now()),
+    db.Column("updated_at", db.DateTime, default=func.now(), onupdate=func.now()),
+)
+
+
+class Brand(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "brands"
+
+    id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
+    name = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class Category(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "categories"
+
+    id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
+    name = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class Classify(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'classifies'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class ClassifyCrawlProgress(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "classify_crawl_progresses"
+
+    id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
+    model_id = db.Column(db.BigInt(unsigned=True))
+    model = db.Column(db.String(255))
+    total = db.Column(db.Integer)
+    finished = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
 
 
 class Product(BaseModel):
@@ -60,6 +123,8 @@ class Product(BaseModel):
 
     # 一对多关系 目标类中必须要存在product属性
     product_items = relationship('ProductItem', back_populates="product")
+    product_type_relations = relationship("ProductTypeProductRelation", back_populates="product")
+    types = relationship("ProductType", secondary=product_type_product_relations, backref='products')
 
 
 class ProductItem(BaseModel):
@@ -89,6 +154,156 @@ class ProductItem(BaseModel):
     product = relationship('Product', back_populates="product_items")
     site = relationship('Site', back_populates="product_items")
     daily_ranks = relationship('ProductItemDailyRank', back_populates="product_item")
+    product_item_reviews = relationship('ProductItemReview', back_populates="product_item")
+
+
+class ProductItemCrawlDate(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = "product_item_crawl_dates"
+
+    id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
+    classify_crawl_date = db.Column(db.Date)
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class ProductItemDailyData(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'product_item_daily_data'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    date = db.Column(db.Date)
+    product_item_id = db.Column(db.BigInt(unsigned=True))
+    product_id = db.Column(db.BigInt(unsigned=True))
+    rating = db.Column(db.Float)
+    reviews = db.Column(db.Integer)
+    helpers = db.Column(db.Integer)
+    price = db.Column(db.String)
+    questions = db.Column(db.Integer)
+    answers = db.Column(db.Integer)
+    classify_rank = db.Column(db.JSON)
+    feature_rate = db.Column(db.JSON)
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class ProductItemDailyRank(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'product_item_daily_ranks'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    date = db.Column(db.Date)
+    product_item_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('product_items.id'))
+    classify_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('classifies.id'))
+    rank = db.Column(db.Integer)
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+    product_item = relationship('ProductItem', back_populates="daily_ranks")
+
+
+class ProductItemKeyword(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'product_item_keywords'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String)
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class ProductItemReview(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'product_item_reviews'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    uuid = db.Column(db.String(32), unique=True)
+    product_item_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('product_items.id'))
+    product_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('products.id'))
+    site_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('sites.id'))
+    username = db.Column(db.String)
+    title = db.Column(db.Text)
+    attr = db.Column(db.String)
+    rating = db.Column(db.Integer)
+    color = db.Column(db.String)
+    size = db.Column(db.String)
+    helpers = db.Column(db.Integer)
+    detail_link = db.Column(db.String)
+    content = db.Column(db.Text)
+    is_processed = db.Column(db.Integer)
+    date = db.Column(db.Date)
+
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+    product_item = relationship('ProductItem', back_populates="product_item_reviews")
+
+
+class ProductType(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'product_types'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String)
+
+    product_relations = relationship("ProductTypeProductRelation", back_populates="product_type")
+
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class ProductTypeProductRelation(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'product_type_product_relations'
+
+    product_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('products.id'), primary_key=True)
+    product_type_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('product_types.id'), primary_key=True)
+
+    product = relationship('Product', back_populates="product_type_relations")
+    product_type = relationship('ProductType', back_populates="product_relations")
+
+
+class Shop(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'shops'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    asin = db.Column(db.String)
+    name = db.Column(db.String)
+
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class ShopItem(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'shop_items'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    shop_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('shops.id'))
+    site_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('sites.id'))
+
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class ShopItemDetail(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'shop_item_details'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    shop_item_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('shop_items.id'))
+    little_goods_trend = db.Column(db.JSON)
+    high_rate_goods_trend = db.Column(db.JSON)
+    review_trend = db.Column(db.JSON)
+    rate_trend = db.Column(db.JSON)
+    little_goods_num = db.Column(db.Integer)
+    high_rate_goods_num = db.Column(db.Integer)
+    review_num = db.Column(db.Integer)
+    rate = db.Column(db.Integer)
+
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
 
 
 class Site(BaseModel):
@@ -117,36 +332,11 @@ class SiteConfig(BaseModel):
     config = db.Column(db.JSON)
 
 
-class Classify(BaseModel):
-    __table_args__ = {'extend_existing': True}
-    __tablename__ = 'classifies'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, default=func.now())
-    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
-
-
-class ProductItemDailyRank(BaseModel):
-    __table_args__ = {'extend_existing': True}
-    __tablename__ = 'product_item_daily_ranks'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    date = db.Column(db.Date)
-    product_item_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('product_items.id'))
-    classify_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('classifies.id'))
-    rank = db.Column(db.Integer)
-    created_at = db.Column(db.DateTime, default=func.now())
-    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
-
-    product_item = relationship('ProductItem', back_populates="daily_ranks")
-
-
 if __name__ == '__main__':
-    # 一对多关系模型
-    with db.auto_commit_db():
-        rs = db.session.query(Product).filter(id==810).first()
-        print(rs.product_items)
+    # # 一对多关系模型
+    # with db.auto_commit_db():
+    #     rs = db.session.query(Product).filter().first()
+    #     print(rs.product_items)
     #
     # with db.auto_commit_db():
     #     rs = db.session.query(ProductItem).first()
@@ -160,3 +350,10 @@ if __name__ == '__main__':
     # with db.auto_commit_db():
     #     rs = db.session.query(SiteConfig).first()
     #     print(rs.site.name)
+
+    # 多对多关联查询
+    with db.auto_commit_db():
+        cpa = db.session.query(ProductType).filter(ProductType.id == 1).first()
+        print(cpa.name)
+        products = db.session.query(Product).filter(Product.types.contains(cpa)).count()
+        print(products)

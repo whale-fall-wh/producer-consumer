@@ -6,9 +6,12 @@
 # @Software: PyCharm
 
 from app.repositories.BaseRepository import BaseRepository
-from app.models import ProductItemDailyRank
+from app.models import ProductItemDailyRank as CurrentModel
+from utils.Singleton import singleton
+from typing import Type
 
 
+@singleton
 class ProductItemDailyRankRepository(BaseRepository):
-    def init_model(self):
-        return ProductItemDailyRank
+    def init_model(self) -> Type[CurrentModel]:
+        return CurrentModel

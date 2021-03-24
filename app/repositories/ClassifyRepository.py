@@ -7,9 +7,11 @@
 
 from typing import Type
 from app.repositories.BaseRepository import BaseRepository
-from app.models import Classify
+from app.models import Classify as CurrentModel
+from utils.Singleton import singleton
 
 
+@singleton
 class ClassifyRepository(BaseRepository):
-    def init_model(self) -> Type[Classify]:
-        return Classify
+    def init_model(self) -> Type[CurrentModel]:
+        return CurrentModel

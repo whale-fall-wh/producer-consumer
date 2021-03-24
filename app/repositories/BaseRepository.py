@@ -13,6 +13,7 @@ class BaseRepository(metaclass=ABCMeta):
     对model的进一步封装，model中只有属性和关系，repository是一些操作对象
     """
     def __init__(self):
+        self.db = db
         self.model = self.init_model()
 
     @abstractmethod
@@ -23,14 +24,14 @@ class BaseRepository(metaclass=ABCMeta):
         pass
 
     def show(self, model_id: int):
-        with db.auto_commit_db():
-            model = db.session.query(self.model).filter(self.model.id == model_id).first()
+        with self.db.auto_commit_db():
+            model = self.db.session.query(self.model).filter(self.model.id == model_id).first()
 
         return model
 
     def all(self) -> list:
-        with db.auto_commit_db():
-            return db.session.query(self.model).filter().all()
+        with self.db.auto_commit_db():
+            return self.db.session.query(self.model).filter().all()
 
     def store(self):
         pass

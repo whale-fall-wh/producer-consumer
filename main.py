@@ -49,5 +49,6 @@ if __name__ == '__main__':
     argv = sys.argv[1:]
     if 'run_all_producer' in argv:
         Producer().run_all()
-    Consumer().start()  # 多线程启动消费者
-    Producer().start()
+    else:
+        Consumer().start()  # 多线程启动消费者
+        Producer().start()

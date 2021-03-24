@@ -8,3 +8,6 @@ from app.repositories.ProductItemRepository import ProductItemRepository
 from app.repositories.SiteRepository import SiteRepository
 from app.repositories.ClassifyRepository import ClassifyRepository
 from app.repositories.ProductItemDailyRankRepository import ProductItemDailyRankRepository
+from app.repositories.ProductTypeRepository import ProductTypeRepository
+from app.repositories.ProductItemReviewRepository import ProductItemReviewRepository
+from app.repositories.ProductItemDailyDataRepository import ProductItemDailyDataRepository

@@ -1,18 +1,17 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time : 2021/3/16 3:34 下午 
+# @Time : 2021/3/23 3:59 下午 
 # @Author : wangHua
-# @File : SiteRepository.py 
+# @File : ProductTypeRepository.py 
 # @Software: PyCharm
 
-from typing import Type
 from app.repositories.BaseRepository import BaseRepository
-from app.models import Site as CurrentModel
+from app.models import ProductType as CurrentModel
 from utils.Singleton import singleton
 
 
 @singleton
-class SiteRepository(BaseRepository):
+class ProductTypeRepository(BaseRepository):
 
-    def init_model(self) -> Type[CurrentModel]:
+    def init_model(self):
         return CurrentModel

@@ -19,16 +19,18 @@ class ProductElement(BaseElement):
         self.translate = get_translate_by_locale(self.site_config.key)
         if self.translate is None:
             self.translate = get_translate_by_locale('en')
-            Logger().warning('未获取到翻译器，已使用en翻译，请及时配置')
+            Logger().warning('未获取到 {} 翻译器，已使用en翻译，请及时配置'.format(self.site_config.key))
         BaseElement.__init__(self, content)
 
     def get_element_title(self) -> [str, None]:
         elements = self.html.xpath(self.site_config.product_title_xpath)
+
         return ''.join(elements).strip()
 
     def get_element_price(self) -> str:
         elements = self.html.xpath(self.site_config.product_price_xpath)
-        return ''.join(elements).strip()
+
+        return replace_multi(''.join(elements).strip(), [' ', '&nbsp;', self.site_config.product_price_unit], '')
 
     def get_element_rating(self) -> float:
         elements = self.html.xpath(self.site_config.product_rating_xpath)

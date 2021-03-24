@@ -30,6 +30,7 @@ class SiteConfigEntity(BaseEntity):
     product_rating_split = None
     product_available_date_format = None
     product_available_date_locale = None
+    product_price_unit = ''
 
     has_en_translate = False
 
@@ -44,5 +45,6 @@ class SiteConfigEntity(BaseEntity):
         self.product_available_date_locale = data.get('product', {}).get('rank_split', '')
         self.has_en_translate = data.get('has_en_translate', '')
         self.product_rating_split = data.get('product', {}).get('rating_split', [])
+        self.product_price_unit = data.get('product', {}).get('unit', '')
 
         return self

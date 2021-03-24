@@ -64,7 +64,7 @@ class ProductCrawler(BaseAmazonCrawler):
         if available_date:
             product_dict['available_date'] = available_date
         if self.product:
-            self.product_repository.update(self.product.id, product_dict)
+            self.product_repository.update_by_id(self.product.id, product_dict)
         if self.product_item:
             product_item_dict = deepcopy(product_dict)
             if price:
@@ -72,7 +72,15 @@ class ProductCrawler(BaseAmazonCrawler):
             if feature_rate:
                 product_item_dict['feature_rate'] = feature_rate
             if classify_rank:
-                product_item_dict['classify_rank'] = classify_rank
-            self.product_item_repository.update(self.product_item.id, product_item_dict)
+                product_item_dict['classify_rank'] = self.handle_ranks_dict(classify_rank)
+            self.product_item.update(product_item_dict)
 
+        self.product_service.update_product_item_daily_data(self.product_item)
         self.product_service.update_product_item_daily_rank(self.product_item, ranks=classify_rank)
+
+    @staticmethod
+    def handle_ranks_dict(classify_rank: dict):
+        if classify_rank:
+            return ["{} in {}".format(rank, name) for name, rank in classify_rank.items()]
+        else:
+            return []
