@@ -26,8 +26,9 @@ develop:
       files:
         - .env
     writable:
-      mode: acl
+      mode: chown
       recursive: true
+      sudo: true
       dirs:
       files:
     remove:
@@ -66,6 +67,7 @@ production:
         - .env
     writable:
       mode: chown
+      sudo: true
       recursive: true
       dirs:
 
