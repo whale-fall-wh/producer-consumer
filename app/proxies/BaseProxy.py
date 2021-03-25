@@ -4,7 +4,7 @@
 # @Software: PyCharm
 
 from abc import ABCMeta, abstractmethod
-from utils.Logger import Logger
+from utils import Logger
 
 
 class BaseProxy(metaclass=ABCMeta):

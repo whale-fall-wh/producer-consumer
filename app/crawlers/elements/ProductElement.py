@@ -4,12 +4,12 @@
 # @Software: PyCharm
 
 from app.crawlers.elements.BaseElement import BaseElement
-from app.entities.SiteConfigEntity import SiteConfigEntity
+from app.entities import SiteConfigEntity
 import re
 import html
 from common import replace_multi, str2int, str2float
 from app.translates import get_translate_by_locale
-from utils.Logger import Logger
+from utils import Logger
 
 
 class ProductElement(BaseElement):

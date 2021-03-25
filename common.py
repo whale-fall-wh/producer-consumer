@@ -3,12 +3,10 @@
 
 import time
 import random
-from utils.Logger import Logger
 
 
 def sleep_random():
     random_time = random.randint(3, 10)
-    Logger().debug('随机sleep{}s'.format(random_time))
     time.sleep(random_time)
 
 
@@ -25,19 +23,19 @@ def replace_multi(string: str, search, replace: str):
     return string.replace(search, replace)
 
 
-def str2int(s):
+def str2int(s, default=0):
     try:
         return int(s)
     except:
-        return 0
+        return default
 
 
-def str2float(s, d=1) -> float:
+def str2float(s, d=1, default=0.0) -> float:
     try:
         s = float(s)
         return round(s, d)
     except:
-        return 0.0
+        return default
 
 
 if __name__ == '__main__':

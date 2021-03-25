@@ -4,12 +4,12 @@
 # @Software: PyCharm
 
 from .elements.AmazonExceptionElement import AmazonExceptionElement
-from app.exceptions.NotFoundException import NotFoundException
+from app.exceptions import NotFoundException, CrawlErrorException
 from utils.Http import Http
 from app.crawlers.Captcha import Captcha
 from abc import ABCMeta, abstractmethod
 from app.models import Site
-from app.entities.SiteConfigEntity import SiteConfigEntity
+from app.entities import SiteConfigEntity
 
 
 class BaseAmazonCrawler(metaclass=ABCMeta):
@@ -38,6 +38,8 @@ class BaseAmazonCrawler(metaclass=ABCMeta):
 
         rs = self.http.request(method=method, url=url, **kwargs)
         exception = AmazonExceptionElement(content=rs.content, site_config_entity=self.site_config_entity)
+        if exception.error_500():
+            raise CrawlErrorException('{} 500+ error'.format(url))
         if exception.not_found():
             raise NotFoundException('{} not_found'.format(url))
 

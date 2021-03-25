@@ -11,3 +11,5 @@ from app.enums.BaseEnum import BaseEnum
 class RedisListKeyEnum(BaseEnum):
 
     product_crawl_job = 'product_crawl_job'
+
+    product_review_crawl_job = 'product_review_crawl_job'

@@ -7,11 +7,10 @@
 import logging
 from logging.handlers import TimedRotatingFileHandler
 import settings
-from utils.Singleton import singleton
+from utils.Singleton import ThreadSafeSingleton
 
 
-@singleton
-class Logger:
+class Logger(metaclass=ThreadSafeSingleton):
     """
     日志-控制台打印所有日志，文件记录info级别以上日志
     """

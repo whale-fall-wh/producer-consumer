@@ -10,7 +10,7 @@
 import base64
 import requests
 from decouple import config
-from utils.Logger import Logger
+from utils import Logger
 from utils.Redis import Redis
 
 

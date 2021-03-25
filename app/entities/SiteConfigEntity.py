@@ -10,6 +10,7 @@ from .BaseEntity import BaseEntity
 
 class SiteConfigEntity(BaseEntity):
     key = ''
+    error_500 = '//input[@name="cs_503_search"]'     # 503异常页面也会有id=g，要先判断是否页面异常，再判断not_found
     page_not_found = '//*[@id="g"]'     # 这个如果有其他页面也在使用id=g就有异常了，就会被判定成not_found
     validate_captcha = '//form[@action="/errors/validateCaptcha"]'
 
@@ -32,6 +33,21 @@ class SiteConfigEntity(BaseEntity):
     product_available_date_locale = None
     product_price_unit = ''
 
+    product_review_list_xpath = '//div[@id="cm_cr-review_list"]/div[@data-hook="review"]'
+    product_review_title_xpath = '//*[@data-hook="review-title"]//text()'   # 只筛选本站点的，其他国家的先排除
+    product_review_uuid_xpath = '//@id'
+    product_review_username_xpath = '//*[@class="a-profile-name"]/text()'
+    product_review_date_xpath = '//span[@data-hook="review-date"]/text()'
+    product_review_rating_xpath = '//i[contains(@data-hook,"review-star-rating")]//text()'
+    product_review_content_xpath = '//span[@data-hook="review-body"]//text()'
+    product_review_color_size_xpath = '//a[@data-hook="format-strip"]/text()'
+    product_review_helpful_xpath = '//*[@data-hook="helpful-vote-statement"]//text()'
+    product_review_detail_link_xpath = '//*[@data-hook="review-title"]/@href'
+
+    product_review_color_name = None
+    product_review_size_name = None
+    product_review_data_split = None
+
     has_en_translate = False
 
     def to_object(self, data: dict):
@@ -46,5 +62,8 @@ class SiteConfigEntity(BaseEntity):
         self.has_en_translate = data.get('has_en_translate', '')
         self.product_rating_split = data.get('product', {}).get('rating_split', [])
         self.product_price_unit = data.get('product', {}).get('unit', '')
+        self.product_review_color_name = data.get('review', {}).get('color_name', '')
+        self.product_review_size_name = data.get('review', {}).get('size_name', '')
+        self.product_review_data_split = data.get('review', {}).get('date', {}).get('split', '')
 
         return self

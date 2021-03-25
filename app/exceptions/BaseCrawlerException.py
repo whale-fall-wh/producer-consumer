@@ -5,7 +5,7 @@
 # @File : BaseCrawlerException.py
 # @Software: PyCharm
 
-from utils.Logger import Logger
+from utils import Logger
 
 
 class BaseCrawlException(Exception):

@@ -2,3 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author : wangHua
 # @Software: PyCharm
+
+
+from app.crawlers.elements.ProductReviewListElement import ProductReviewListElement
+from app.crawlers.elements.ProductElement import ProductElement
+from app.crawlers.elements.ProductReviewItemElement import ProductReviewItemElement

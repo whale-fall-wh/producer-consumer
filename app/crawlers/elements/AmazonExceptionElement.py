@@ -5,9 +5,9 @@
 # @File : CaptchaElement.py 
 # @Software: PyCharm
 
-from .BaseElement import BaseElement
-from app.entities.SiteConfigEntity import SiteConfigEntity
-import settings, time
+from app.crawlers.elements.BaseElement import BaseElement
+from app.entities import SiteConfigEntity
+import settings
 
 
 class AmazonExceptionElement(BaseElement):
@@ -29,3 +29,9 @@ class AmazonExceptionElement(BaseElement):
                 f.write(self.get_html(self.html))
 
         return bool(element)
+
+    def error_500(self):
+        error = self.html.xpath(self.site_config_entity.error_500)
+        not_found = self.html.xpath(self.site_config_entity.page_not_found)
+
+        return bool(error) and bool(not_found)

@@ -10,7 +10,7 @@ from decouple import config
 import hashlib
 import requests
 import time
-from utils.Logger import Logger
+from utils import Logger
 import copy
 
 

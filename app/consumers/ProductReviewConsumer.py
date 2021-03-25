@@ -1,22 +1,23 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Time : 2021/3/24 1:11 下午 
 # @Author : wangHua
+# @File : ProductReviewConsumer.py 
 # @Software: PyCharm
 
-
-from app.crawlers.ProductCrawler import ProductCrawler
+from app.consumers import BaseConsumer
+from app.enums import RedisListKeyEnum
 from utils import Logger, Http
 from app.proxies import get_proxy_engine
+from app.entities import ProductReviewJobEntity
 import common
-from app.consumers import BaseConsumer
-from app.exceptions.CrawlErrorException import CrawlErrorException
-from app.exceptions import NotFoundException
-from app.enums import RedisListKeyEnum
-from app.entities import ProductJobEntity
+from app.exceptions import CrawlErrorException, NotFoundException
+from app.crawlers import ProductReviewCrawler
 
 
-class ProductConsumer(BaseConsumer):
-    # ignore = True     # 忽略该消费者
+class ProductReviewConsumer(BaseConsumer):
+    threading_num = 1
+
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
                   ',application/signed-exchange;v=b3;q=0.9',
@@ -38,22 +39,24 @@ class ProductConsumer(BaseConsumer):
         BaseConsumer.__init__(self)
 
     def set_job_key(self) -> str:
-        return RedisListKeyEnum.product_crawl_job
+        return RedisListKeyEnum.product_review_crawl_job
 
     def run_job(self):
-        Logger().info('product_consumer start')
+        Logger().info('product_review_consumer start')
         self.http = Http()
         self.proxy_engine = get_proxy_engine()
         self.http.set_headers(self.headers)
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
-                job_entity = ProductJobEntity.instance(job_dict)
+                job_entity = ProductReviewJobEntity.instance(job_dict)
                 try:
                     if self.proxy_engine:
-                        # product 反扒比较苛刻，这边用了随机IP的代理
                         self.http.set_proxy(self.proxy_engine.get_proxy())
-                    ProductCrawler(job_entity, self.http)
+                    crawl = ProductReviewCrawler(job_entity, self.http)
+                    if crawl.crawl_next_page:
+                        job_entity.page += 1
+                        self.set_job(job_entity)
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
                     self.set_error_job(job_entity)
@@ -61,9 +64,3 @@ class ProductConsumer(BaseConsumer):
                     # 页面不存在，不做处理
                     pass
                 common.sleep_random()
-
-
-if __name__ == '__main__':
-    t = ProductConsumer()
-    t.setDaemon(False)  # 非守护进程，主线程结束任务之后，会等待线程结束，注意任务是死循环
-    t.start()

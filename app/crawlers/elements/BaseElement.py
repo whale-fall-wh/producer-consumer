@@ -41,3 +41,7 @@ class BaseElement(object):
     @staticmethod
     def get_html(element) -> str:
         return etree.tostring(element).decode("utf-8")
+
+    @staticmethod
+    def get_content(element) -> bytes:
+        return etree.tostring(element)

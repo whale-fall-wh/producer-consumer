@@ -6,7 +6,7 @@
 from app.proxies.BaseProxy import BaseProxy
 import os
 import random
-from utils.Logger import Logger
+from utils import Logger
 import settings
 
 

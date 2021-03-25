@@ -4,15 +4,14 @@
 # @Software: PyCharm
 
 from app.producers import BaseProducer
-from utils.Logger import Logger
+from utils import Logger
 from app.repositories import ProductRepository, ProductTypeRepository
-from app.entities.ProductJobEntity import ProductJobEntity
+from app.entities import ProductJobEntity as CurrentJobEntity
 from app.enums import RedisListKeyEnum, ProductTypeEnum
 from progress.bar import Bar
 
 
 class ProductProducer(BaseProducer):
-    every = 24*60*60             # 每隔秒数投放任务
 
     def __init__(self):
         self.job_count = 0
@@ -30,12 +29,12 @@ class ProductProducer(BaseProducer):
     def start(self):
         # 这边只会产出cpa、shop类型的产品，search类型的可以不抓取
         products = self.productRepository.getProductsByType([ProductTypeEnum.TYPE_ID_CPA, ProductTypeEnum.TYPE_ID_SHOP])
-        with Bar('正在插入队列...', max=len(products), fill='#', suffix='%(percent)d%%') as bar:
+        with Bar('product-producer...', max=len(products), fill='#', suffix='%(percent)d%%') as bar:
             for product in products:
                 for product_item in product.product_items:
                     if product_item.site:
                         # 没有传对象，直接存了ID，取出任务后，需要使用id再获取到对象再操作,消费队列通过product_item_id获取，其他参数可有可无
-                        entity = ProductJobEntity.instance({
+                        entity = CurrentJobEntity.instance({
                             'product_id': product.id,
                             'product_asin': product.asin,
                             'site_id': product_item.site.id,

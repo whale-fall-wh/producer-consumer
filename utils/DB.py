@@ -5,7 +5,7 @@
 # @Software: PyCharm
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from contextlib import contextmanager
 from settings import CONNECTION_STR
@@ -24,7 +24,8 @@ class DB:
         self.engine = create_engine(CONNECTION_STR)
         # model需要继承的基类:
         self.Model = declarative_base()
-        self.session = sessionmaker(bind=self.engine)()
+        # scoped_session 线程安全，不然多线程会异常
+        self.session = scoped_session(sessionmaker(bind=self.engine))
         self.Column = Column
         self.Integer = Integer
         self.BigInt = mysql.BIGINT

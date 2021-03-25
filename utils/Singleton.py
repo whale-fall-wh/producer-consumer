@@ -4,6 +4,9 @@
 # @Author : wangHua
 # @Software: PyCharm
 
+import functools
+import threading
+
 
 def singleton(cls):
     """
@@ -18,3 +21,24 @@ def singleton(cls):
             _instance[cls] = cls()
         return _instance[cls]
     return inner
+
+
+def synchronized(func):
+    func.__lock__ = threading.Lock()
+
+    def lock_func(*args, **kwargs):
+        with func.__lock__:
+            return func(*args, **kwargs)
+
+    return lock_func
+
+
+# 线程安全单利类
+class ThreadSafeSingleton(type):
+    _instances = {}
+
+    @synchronized
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(ThreadSafeSingleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]

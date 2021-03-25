@@ -3,10 +3,10 @@
 # @Author : wangHua
 # @Software: PyCharm
 
-from utils.Logger import Logger
+from utils import Logger
 from utils.Http import Http
 import requests
-from app.crawlers.elements.ProductElement import ProductElement
+from app.crawlers.elements import ProductElement
 from app.crawlers.BaseAmazonCrawler import BaseAmazonCrawler
 from app.exceptions.CrawlErrorException import CrawlErrorException
 from app.entities.ProductJobEntity import ProductJobEntity
@@ -40,17 +40,15 @@ class ProductCrawler(BaseAmazonCrawler):
             title = getattr(product_element, 'title')
             if title:
                 data = product_element.get_all_element()
-                Logger().info(data)
                 no_empty_data = dict()
                 for k, v in data.items():
                     if v:
                         no_empty_data[k] = v
                 self.save_data(no_empty_data)
-
             else:
                 raise CrawlErrorException('页面请求异常, 地址 {}'.format(self.url))
         except requests.exceptions.RequestException:
-            raise CrawlErrorException(self.url + '请求异常')
+            raise CrawlErrorException('product ' + self.url + '请求异常')
 
     def save_data(self, no_empty_data: dict):
         rating = no_empty_data.get('rating', 0.0)

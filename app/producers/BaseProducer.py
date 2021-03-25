@@ -9,7 +9,6 @@ import schedule
 
 
 class BaseProducer(BaseJob, metaclass=ABCMeta):
-    every = 1 * 60 * 60 * 24
 
     def __init__(self):
         BaseJob.__init__(self)
@@ -20,5 +19,6 @@ class BaseProducer(BaseJob, metaclass=ABCMeta):
     def start(self):
         pass
 
+    @abstractmethod
     def _schedule(self):
-        self.schedule.every(self.every).seconds.do(self.start)
+        pass

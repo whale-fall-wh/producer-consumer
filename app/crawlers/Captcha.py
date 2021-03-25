@@ -5,7 +5,7 @@
 
 from utils.Http import Http
 from lxml import etree
-from utils.Logger import Logger
+from utils import Logger
 import settings
 from utils.BDApi import ImgApi
 import os
