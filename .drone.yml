@@ -4,7 +4,7 @@ name: default
 
 steps:
   - name: deploy
-    image: wanghua35/deploy
+    image: registry.cn-hangzhou.aliyuncs.com/leadingtech/deploy
     volumes:
       - name: develop-key
         path: /root/.ssh/deployer.id_rsa
