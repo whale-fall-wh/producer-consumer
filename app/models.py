@@ -178,7 +178,7 @@ class ProductItemDailyData(BaseModel):
     rating = db.Column(db.Float)
     reviews = db.Column(db.Integer)
     helpers = db.Column(db.Integer)
-    price = db.Column(db.String)
+    price = db.Column(db.String(255))
     questions = db.Column(db.Integer)
     answers = db.Column(db.Integer)
     classify_rank = db.Column(db.JSON)
@@ -207,7 +207,7 @@ class ProductItemKeyword(BaseModel):
     __tablename__ = 'product_item_keywords'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
 
@@ -221,14 +221,14 @@ class ProductItemReview(BaseModel):
     product_item_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('product_items.id'))
     product_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('products.id'))
     site_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('sites.id'))
-    username = db.Column(db.String)
+    username = db.Column(db.String(255))
     title = db.Column(db.Text)
-    attr = db.Column(db.String)
+    attr = db.Column(db.String(255))
     rating = db.Column(db.Integer)
-    color = db.Column(db.String)
-    size = db.Column(db.String)
+    color = db.Column(db.String(255))
+    size = db.Column(db.String(255))
     helpers = db.Column(db.Integer)
-    detail_link = db.Column(db.String)
+    detail_link = db.Column(db.String(255))
     content = db.Column(db.Text)
     is_processed = db.Column(db.Integer)
     date = db.Column(db.Date)
@@ -244,7 +244,7 @@ class ProductType(BaseModel):
     __tablename__ = 'product_types'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String(255))
 
     product_relations = relationship("ProductTypeProductRelation", back_populates="product_type")
 
@@ -268,8 +268,8 @@ class Shop(BaseModel):
     __tablename__ = 'shops'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    asin = db.Column(db.String)
-    name = db.Column(db.String)
+    asin = db.Column(db.String(255))
+    name = db.Column(db.String(255))
 
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())

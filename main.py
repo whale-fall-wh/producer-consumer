@@ -8,6 +8,7 @@ import schedule
 import time
 from app import consumers, producers
 import argparse
+from utils.DB import db
 
 
 class Argparse(object):
@@ -28,6 +29,7 @@ class Argparse(object):
         self.parser.add_argument('-run-consumer', help='运行指定consumer', dest='consumer_class_name', choices=[
             consumer_class.__name__ for consumer_class in consumers.consumers
         ])
+        self.parser.add_argument('-migrate', help='创建表', action='store_true')
 
     def run(self):
         if self.args.producer_class_name:
@@ -36,6 +38,8 @@ class Argparse(object):
             self.s.run_by_class_name(self.args.consumer_class_name)
         elif self.args.run_all_producer:
             self.p.run_all()
+        elif self.args.migrate:
+            db.create_all()
         else:
             self.s.start()
             self.p.start()

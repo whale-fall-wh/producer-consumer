@@ -47,5 +47,8 @@ class DB:
             self.session.rollback()
             raise e
 
+    def create_all(self):
+        self.Model.metadata.create_all(self.engine)
+
 
 db = DB()
