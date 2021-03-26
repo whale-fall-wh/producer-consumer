@@ -6,7 +6,7 @@
 # @Software: PyCharm
 
 from lxml import etree
-from app.exceptions.CrawlErrorException import CrawlErrorException
+from app.exceptions import CrawlErrorException
 
 
 class BaseElement(object):

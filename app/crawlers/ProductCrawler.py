@@ -8,8 +8,8 @@ from utils.Http import Http
 import requests
 from app.crawlers.elements import ProductElement
 from app.crawlers.BaseAmazonCrawler import BaseAmazonCrawler
-from app.exceptions.CrawlErrorException import CrawlErrorException
-from app.entities.ProductJobEntity import ProductJobEntity
+from app.exceptions import CrawlErrorException
+from app.entities import ProductJobEntity
 from app.repositories import ProductItemRepository, ProductRepository
 from app.services import ProductService
 from copy import deepcopy
@@ -24,9 +24,9 @@ class ProductCrawler(BaseAmazonCrawler):
         self.base_url = '{}/dp/{}'   # 亚马逊产品地址
         self.job_entity = job_entity
         self.product_item = self.product_item_repository.show(self.job_entity.product_item_id)
-        self.product = self.product_item.product
 
         if self.product_item and self.product_item.product and self.product_item.site:
+            self.product = self.product_item.product
             self.url = self.base_url.format(self.product_item.site.domain, self.product.asin)
             BaseAmazonCrawler.__init__(self, http=http, site=self.product_item.site)
 

@@ -6,3 +6,4 @@
 from app.entities.ProductJobEntity import ProductJobEntity
 from app.entities.ProductReviewJobEntity import ProductReviewJobEntity
 from app.entities.SiteConfigEntity import SiteConfigEntity
+from app.entities.ProductAddJobEntity import ProductAddJobEntity

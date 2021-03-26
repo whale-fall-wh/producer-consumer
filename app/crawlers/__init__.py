@@ -5,3 +5,5 @@
 
 from app.crawlers.ProductCrawler import ProductCrawler
 from app.crawlers.ProductReviewCrawler import ProductReviewCrawler
+from app.crawlers.ProductAddCrawler import ProductAddCrawler
+

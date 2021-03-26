@@ -1,20 +1,21 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Time : 2021/3/26 1:57 下午 
 # @Author : wangHua
+# @File : ProductAddConsumer.py 
 # @Software: PyCharm
 
-
-from app.crawlers.ProductCrawler import ProductCrawler
+from app.consumers import BaseConsumer
 from utils import Logger, Http
 from app.proxies import get_proxy_engine
-import common
-from app.consumers import BaseConsumer
 from app.exceptions import NotFoundException, CrawlErrorException
 from app.enums import RedisListKeyEnum
-from app.entities import ProductJobEntity
+from app.entities import ProductJobEntity, ProductAddJobEntity
+from app.crawlers import ProductAddCrawler
+import common
 
 
-class ProductConsumer(BaseConsumer):
+class ProductAddConsumer(BaseConsumer):
     # ignore = True     # 忽略该消费者
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
@@ -37,7 +38,7 @@ class ProductConsumer(BaseConsumer):
         BaseConsumer.__init__(self)
 
     def set_job_key(self) -> str:
-        return RedisListKeyEnum.product_crawl_job
+        return RedisListKeyEnum.product_add_crawl_job
 
     def run_job(self):
         Logger().info('product_consumer start')
@@ -47,12 +48,16 @@ class ProductConsumer(BaseConsumer):
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
-                job_entity = ProductJobEntity.instance(job_dict)
+                job_entity = ProductAddJobEntity.instance(job_dict)
                 try:
                     if self.proxy_engine:
                         # product 反扒比较苛刻，这边用了随机IP的代理
                         self.http.set_proxy(self.proxy_engine.get_proxy())
-                    ProductCrawler(job_entity, self.http)
+                    crawler = ProductAddCrawler(job_entity, self.http)
+                    if crawler.productItem:
+                        job_dict['product_item_id'] = crawler.productItem.id
+                        new_job = ProductJobEntity.instance(job_dict)
+                        self.set_job_by_key(RedisListKeyEnum.product_crawl_job, new_job)
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
                     self.set_error_job(job_entity)
@@ -60,9 +65,3 @@ class ProductConsumer(BaseConsumer):
                     # 页面不存在，不做处理
                     pass
                 common.sleep_random()
-
-
-if __name__ == '__main__':
-    t = ProductConsumer()
-    t.setDaemon(False)  # 非守护进程，主线程结束任务之后，会等待线程结束，注意任务是死循环
-    t.start()

@@ -30,8 +30,8 @@ class ProductReviewCrawler(BaseAmazonCrawler):
         self.productService = ProductService()
         self.job_entity = job_entity
         self.productItem = self.productItemRepository.show(self.job_entity.product_item_id)
-        self.product = self.productItem.product
         if self.productItem and self.productItem.product and self.productItem.site:
+            self.product = self.productItem.product
             if self.productItem.crawl_date:
                 self.crawl_date = self.productItem.crawl_date.strftime('%Y-%m-%d')
             self.url = self.base_url.format(self.productItem.site.domain, self.product.asin, self.job_entity.page)

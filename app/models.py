@@ -324,7 +324,7 @@ class Site(BaseModel):
 
     # 一对多关系 目标类中必须要存在product属性
     product_items = relationship('ProductItem', back_populates="site")
-    shop_items = relationship('ShopItems', back_populates="site")
+    shop_items = relationship('ShopItem', back_populates="site")
     site_config = relationship('SiteConfig', backref="site", uselist=False)
 
 
