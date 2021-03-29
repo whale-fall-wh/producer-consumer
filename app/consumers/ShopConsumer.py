@@ -42,7 +42,7 @@ class ShopConsumer(BaseConsumer):
         return RedisListKeyEnum.shop_crawl_job
 
     def run_job(self):
-        Logger().info('product_consumer start')
+        Logger().info('shop_consumer start')
         self.http = Http()
         self.http.set_headers(self.headers)
         self.proxy_engine = get_proxy_engine()

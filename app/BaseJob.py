@@ -8,13 +8,14 @@ from abc import ABCMeta, abstractmethod
 import common
 import json
 from app.entities.BaseJobEntity import BaseJobEntity
+from decouple import config
 
 
 class BaseJob(metaclass=ABCMeta):
 
     def __init__(self):
         self.job_key = self.set_job_key()
-        self.base_key = 'cpa:job:{}'
+        self.base_key = config('REDIS_PREFIX', 'cpa:') + 'job:{}'
         self.redis = Redis().db
 
     @abstractmethod
