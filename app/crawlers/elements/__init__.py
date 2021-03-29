@@ -7,3 +7,4 @@
 from app.crawlers.elements.ProductReviewListElement import ProductReviewListElement
 from app.crawlers.elements.ProductElement import ProductElement
 from app.crawlers.elements.ProductReviewItemElement import ProductReviewItemElement
+from app.crawlers.elements.ShopElement import ShopElement

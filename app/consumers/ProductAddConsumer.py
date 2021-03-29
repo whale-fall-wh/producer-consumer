@@ -44,7 +44,7 @@ class ProductAddConsumer(BaseConsumer):
         return RedisListKeyEnum.product_add_crawl_job
 
     def run_job(self):
-        Logger().info('product_consumer start')
+        Logger().info('product_add_consumer start')
         self.http = Http()
         self.proxy_engine = get_proxy_engine()
         self.http.set_headers(self.headers)
@@ -54,7 +54,6 @@ class ProductAddConsumer(BaseConsumer):
                 job_entity = ProductAddJobEntity.instance(job_dict)
                 try:
                     if self.proxy_engine:
-                        # product 反扒比较苛刻，这边用了随机IP的代理
                         self.http.set_proxy(self.proxy_engine.get_proxy())
                     crawler = ProductAddCrawler(job_entity, self.http)
                     if crawler.productItem:

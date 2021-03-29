@@ -11,3 +11,5 @@ from app.repositories.ProductItemDailyRankRepository import ProductItemDailyRank
 from app.repositories.ProductTypeRepository import ProductTypeRepository
 from app.repositories.ProductItemReviewRepository import ProductItemReviewRepository
 from app.repositories.ProductItemDailyDataRepository import ProductItemDailyDataRepository
+from app.repositories.ShopRepository import ShopRepository
+from app.repositories.ShopItemRepository import ShopItemRepository

@@ -48,6 +48,8 @@ class SiteConfigEntity(BaseEntity):
     product_review_size_name = None
     product_review_data_split = None
 
+    shop_asin_xpath = '//div[@data-asin]/@data-asin'
+
     has_en_translate = False
 
     def to_object(self, data: dict):

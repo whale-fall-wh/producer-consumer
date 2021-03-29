@@ -72,8 +72,7 @@ class ProductReviewCrawler(BaseAmazonCrawler):
             raise CrawlErrorException('review ' + self.url + '请求异常')
 
     def check_next_page(self):
-        if self.review_count < 10:
-            return False
+        return self.review_count >= 10
 
     def save(self, data: dict):
         if data:

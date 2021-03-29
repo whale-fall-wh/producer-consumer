@@ -49,6 +49,10 @@ class BaseModel(db.Model):
 
             return model
 
+    def delete(self):
+        with db.auto_commit_db():
+            db.session.delete(self)
+
 
 product_type_product_relations = Table(
     "product_type_product_relations",
@@ -109,7 +113,7 @@ class Product(BaseModel):
     id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), default='')
     asin = db.Column(db.String(255), unique=True, nullable=False)
-    img = db.Column(db.String(255), nullable=True)
+    img = db.Column(db.String(255), default='')
     rating = db.Column(db.Float, default=0.0)
     reviews = db.Column(db.Integer, default=0)
     rating_change = db.Column(db.Float, default=0.0)
@@ -145,7 +149,7 @@ class ProductItem(BaseModel):
     feature_rate = db.Column(db.JSON, nullable=True)
     crawl_date = db.Column(db.Date, nullable=True)
     shop_item_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('shop_items.id'))
-    img = db.Column(db.String(255), nullable=True)
+    img = db.Column(db.String(255), default='')
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
 
