@@ -14,7 +14,7 @@ class BaseJob(metaclass=ABCMeta):
 
     def __init__(self):
         self.job_key = self.set_job_key()
-        self.base_key = 'job:{}'
+        self.base_key = 'cpa:job:{}'
         self.redis = Redis().db
 
     @abstractmethod

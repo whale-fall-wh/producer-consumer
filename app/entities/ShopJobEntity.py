@@ -17,4 +17,4 @@ class ShopJobEntity(BaseJobEntity):
     page = 1
 
     def set_job_type(self):
-        return 'product_job'
+        return 'shop_job'
