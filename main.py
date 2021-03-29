@@ -8,7 +8,7 @@ import schedule
 import time
 from app import consumers, producers
 import argparse
-from utils.DB import db
+from utils import db
 
 
 class Argparse(object):

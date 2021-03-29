@@ -13,6 +13,9 @@ from common import replace_multi, str2int, str2float
 
 
 class ProductReviewItemElement(BaseElement):
+    """
+    评论详情元素
+    """
     def __init__(self, content: bytes, site_config: SiteConfigEntity):
         self.site_config = site_config
         self.translate = get_translate_by_locale(self.site_config.key)

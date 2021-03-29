@@ -15,6 +15,9 @@ from app.entities import ProductJobEntity
 
 
 class ProductConsumer(BaseConsumer):
+    """
+    抓取产品信息
+    """
     # ignore = True     # 忽略该消费者
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
@@ -60,9 +63,3 @@ class ProductConsumer(BaseConsumer):
                     # 页面不存在，不做处理
                     pass
                 common.sleep_random()
-
-
-if __name__ == '__main__':
-    t = ProductConsumer()
-    t.setDaemon(False)  # 非守护进程，主线程结束任务之后，会等待线程结束，注意任务是死循环
-    t.start()

@@ -12,13 +12,13 @@ import os
 
 
 class Captcha:
-    """amazon验证码"""
-    params = {'amzn': '', 'amzn-r': '', 'field-keywords': '', }
-    url = ''
-    img_url = ''
-    img_path = settings.STORAGE_PATH + '/imgs/{}'
+    """amazon验证码, 验证码需要维持http会话，以及代理IP固定"""
 
     def __init__(self, base_url: str, html: str, http: Http):
+        self.params = {'amzn': '', 'amzn-r': '', 'field-keywords': '', }
+        self.url = ''
+        self.img_url = ''
+        self.img_path = settings.STORAGE_PATH + '/imgs/{}'
         self.http = http
         self.html = etree.HTML(html)
         self.base_url = base_url

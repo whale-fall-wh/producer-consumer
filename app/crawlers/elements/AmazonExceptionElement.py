@@ -11,6 +11,9 @@ import settings
 
 
 class AmazonExceptionElement(BaseElement):
+    """
+    亚马逊各种异常元素
+    """
 
     def __init__(self, content: bytes, site_config_entity: SiteConfigEntity):
         self.site_config_entity = site_config_entity

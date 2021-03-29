@@ -17,6 +17,10 @@ from copy import deepcopy
 
 class ProductCrawler(BaseAmazonCrawler):
 
+    """
+    抓取、保存产品数据
+    """
+
     def __init__(self, job_entity: ProductJobEntity, http: Http):
         self.product_item_repository = ProductItemRepository()
         self.product_repository = ProductRepository()

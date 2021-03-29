@@ -5,5 +5,9 @@
 
 from utils.Redis import Redis
 from utils.Http import Http
-from utils.Singleton import singleton
+from utils.DB import DB
+from utils.Singleton import singleton, ThreadSafeSingleton
 from utils.Logger import Logger
+from utils.LoadModules import LoadModules
+
+db = DB()

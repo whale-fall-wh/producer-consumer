@@ -44,11 +44,3 @@ class Http(object):
 
     def add_header(self, key: str, value: str):
         self.http.headers[key] = value
-
-
-if __name__ == '__main__':
-    try:
-        re = Http().request("GET", 'https://www.amazon.com')
-        print(re.text)
-    except requests.exceptions.RequestException:
-        print(111)

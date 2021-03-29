@@ -71,8 +71,3 @@ class ImgApi:
                 Logger().debug(self.access_token)
         except:
             return None
-
-
-if __name__ == '__main__':
-    code = ImgApi('/Users/wanghua/PycharmProjects/amazon/storage/imgs/1.jpg').code
-    Logger().debug(code)

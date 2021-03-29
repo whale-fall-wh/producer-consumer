@@ -13,6 +13,9 @@ from utils import Logger
 
 
 class ProductElement(BaseElement):
+    """
+    产品页面元素
+    """
 
     def __init__(self, content: bytes, site_config: SiteConfigEntity):
         self.site_config = site_config

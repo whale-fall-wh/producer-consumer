@@ -5,7 +5,7 @@
 # @Software: PyCharm
 
 from abc import ABCMeta, abstractmethod
-from utils.DB import db
+from utils import db
 
 
 class BaseRepository(metaclass=ABCMeta):

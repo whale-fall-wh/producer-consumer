@@ -16,6 +16,9 @@ from app.crawlers import ProductReviewCrawler
 
 
 class ProductReviewConsumer(BaseConsumer):
+    """
+    住区评论信息
+    """
     threading_num = 1
 
     headers = {

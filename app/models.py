@@ -3,7 +3,7 @@
 # @Author : wangHua
 # @Software: PyCharm
 
-from utils.DB import db
+from utils import db
 from sqlalchemy import func, Table
 from sqlalchemy.orm import relationship
 

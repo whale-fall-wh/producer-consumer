@@ -36,7 +36,3 @@ def str2float(s, d=1, default=0.0) -> float:
         return round(s, d)
     except:
         return default
-
-
-if __name__ == '__main__':
-    print(str2float('5.5222'))

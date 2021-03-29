@@ -10,6 +10,9 @@ from app.exceptions import CrawlErrorException
 
 
 class BaseElement(object):
+    """
+    etree
+    """
 
     def __init__(self, content: bytes):
         self._get_element_prefix = 'get_element_'

@@ -17,7 +17,11 @@ import time
 
 
 class ProductReviewCrawler(BaseAmazonCrawler):
-    # 评论可以直接用get请求html或者用post请求review接口
+
+    """
+    抓取、保存产品评论数据
+    评论可以直接用get请求html或者用post请求review接口
+    """
 
     def __init__(self, job_entity: ProductReviewJobEntity, http: Http):
         self.crawl_next_page = True

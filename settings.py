@@ -7,9 +7,11 @@
 from decouple import config
 import os
 
+# 目录常量
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 STORAGE_PATH = PROJECT_PATH + '/storage'
 
+# mysql配置
 DATABASE_CONFIG = {
     'username': config('DB_USERNAME', 'root'),
     'password': config('DB_PASSWORD', '123456'),
@@ -20,6 +22,7 @@ DATABASE_CONFIG = {
 
 CONNECTION_STR = "mysql+pymysql://{username}:{password}@{host}:{port}/{database}".format(**DATABASE_CONFIG)
 
+# redis配置
 REDIS_CONFIG = {
     'host': config('REDIS_HOST', '127.0.0.1'),
     'port': config('REDIS_PORT', 6379),

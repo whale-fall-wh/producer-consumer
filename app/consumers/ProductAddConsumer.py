@@ -16,6 +16,9 @@ import common
 
 
 class ProductAddConsumer(BaseConsumer):
+    """
+    添加新的asin时，插入对应的任务，该消费者会判断某个站点中的产品是否存在，如果存在，则添加对应站点的asin数据，并产生新的任务
+    """
     # ignore = True     # 忽略该消费者
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'

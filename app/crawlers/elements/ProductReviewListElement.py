@@ -10,6 +10,9 @@ from app.entities import SiteConfigEntity
 
 
 class ProductReviewListElement(BaseElement):
+    """
+    评论列表元素
+    """
     def __init__(self, content: bytes, site_config: SiteConfigEntity):
         self.site_config = site_config
         BaseElement.__init__(self, content)

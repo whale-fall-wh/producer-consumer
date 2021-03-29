@@ -51,6 +51,3 @@ class DB:
         # 简单实现，创建所有的表，
         # TODO: 使用Alembic封装优化数据迁移
         self.Model.metadata.create_all(self.engine)
-
-
-db = DB()
