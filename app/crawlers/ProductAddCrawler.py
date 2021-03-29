@@ -43,7 +43,7 @@ class ProductAddCrawler(BaseAmazonCrawler):
             product_element = ProductElement(content=rs.content, site_config=self.site_config_entity)
             title = getattr(product_element, 'title')
             if title:
-                self.productItem = self.productItemRepository.create({
+                self.productItem = self.productItemRepository.update_or_create({
                     'product_id': self.product.id,
                     'site_id': self.site.id
                 })

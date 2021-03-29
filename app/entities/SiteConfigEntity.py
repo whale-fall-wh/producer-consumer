@@ -11,7 +11,7 @@ from .BaseEntity import BaseEntity
 class SiteConfigEntity(BaseEntity):
     key = ''
     error_500 = '//input[@name="cs_503_search"]'     # 503异常页面也会有id=g，要先判断是否页面异常，再判断not_found
-    page_not_found = '//*[@id="g"]'     # 这个如果有其他页面也在使用id=g就有异常了，就会被判定成not_found
+    page_not_found = '//center/a[@href="/ref=cs_404_logo"] | //*[@id="g"]'     # 这个如果有其他页面也在使用id=g就有异常了，就会被判定成not_found
     validate_captcha = '//form[@action="/errors/validateCaptcha"]'
 
     product_title_xpath = '//*[@id="productTitle"]/text()'
