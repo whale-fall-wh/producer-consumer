@@ -47,9 +47,10 @@ class ShopCrawler(BaseAmazonCrawler):
                 self.save(product)
             self.asin_list = len(asin_list)
             if self.jobEntity.page == 1 and self.asin_list == 0:
+                pass
                 # 店铺产品列表为空时，删除店铺
-                self.shopItem.delete()
-                self.shop.delete()
+                # self.shopItem.delete()
+                # self.shop.delete()
             self.crawl_next_page = self.check_next_page()
         except requests.exceptions.RequestException:
             raise CrawlErrorException('review ' + self.url + '请求异常')
