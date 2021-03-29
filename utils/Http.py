@@ -34,10 +34,9 @@ class Http(object):
         return not_find
 
     def set_proxy(self, proxy=None):
-        self.http.proxies = proxy
-        Logger().debug('获取到的代理为：' + self.http.proxies.__str__())
-
-        return self.http.proxies
+        if proxy is not None:
+            self.http.proxies = proxy
+            Logger().debug('获取到的代理为：' + self.http.proxies.__str__())
 
     def set_headers(self, headers: dict):
         self.http.headers = headers

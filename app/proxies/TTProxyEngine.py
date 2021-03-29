@@ -100,9 +100,3 @@ class TTProxy(BaseProxy):
             hexdigest()
 
         return params
-
-
-if __name__ == '__main__':
-    # TTProxy().add_white_list('54.219.185.72')
-    # TTProxy().get_white_list()
-    print(TTProxy().proxy_ip)
