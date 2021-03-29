@@ -46,4 +46,4 @@ class ShopProducer(BaseProducer):
                     self.job_count += 1
                 bar.next()
 
-        Logger().info('product 开始投放任务,{}个产品, 共添加{}个任务'.format(len(shopItems), self.job_count))
+        Logger().info('shop 开始投放任务,{}个产品, 共添加{}个任务'.format(len(shopItems), self.job_count))

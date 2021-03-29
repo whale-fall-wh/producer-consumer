@@ -28,7 +28,7 @@ class ProductProducer(BaseProducer):
 
     def start(self):
         # 这边只会产出cpa、shop类型的产品，search类型的可以不抓取
-        products = self.productRepository.getProductsByType([ProductTypeEnum.TYPE_ID_CPA, ProductTypeEnum.TYPE_ID_SHOP])
+        products = self.productRepository.getProductsByType([ProductTypeEnum.TYPE_ID_CPA])
         with Bar('product-producer...', max=len(products), fill='#', suffix='%(percent)d%%') as bar:
             for product in products:
                 for product_item in product.product_items:
