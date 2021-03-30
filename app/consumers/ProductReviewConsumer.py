@@ -19,7 +19,7 @@ class ProductReviewConsumer(BaseConsumer):
     """
     住区评论信息
     """
-    threading_num = 1
+    threading_num = 3
 
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
@@ -36,27 +36,22 @@ class ProductReviewConsumer(BaseConsumer):
         'upgrade-insecure-requests': '1',
     }
 
-    def __init__(self):
-        self.http = None
-        self.proxy_engine = None
-        BaseConsumer.__init__(self)
-
     def set_job_key(self) -> str:
         return RedisListKeyEnum.product_review_crawl_job
 
     def run_job(self):
         Logger().info('product_review_consumer start')
-        self.http = Http()
-        self.proxy_engine = get_proxy_engine()
-        self.http.set_headers(self.headers)
+        http = Http()
+        proxy_engine = get_proxy_engine()
+        http.set_headers(self.headers)
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
                 job_entity = ProductReviewJobEntity.instance(job_dict)
                 try:
-                    if self.proxy_engine:
-                        self.http.set_proxy(self.proxy_engine.get_proxy())
-                    crawl = ProductReviewCrawler(job_entity, self.http)
+                    if proxy_engine:
+                        http.set_proxy(proxy_engine.get_proxy())
+                    crawl = ProductReviewCrawler(job_entity, http)
                     if crawl.crawl_next_page:
                         job_entity.page += 1
                         self.set_job(job_entity)

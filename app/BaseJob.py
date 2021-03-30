@@ -12,18 +12,18 @@ from decouple import config
 
 
 class BaseJob(metaclass=ABCMeta):
+    base_key = config('REDIS_PREFIX', 'cpa:') + 'job:{}'
 
     def __init__(self):
         self.job_key = self.set_job_key()
-        self.base_key = config('REDIS_PREFIX', 'cpa:') + 'job:{}'
-        self.redis = Redis().db
 
     @abstractmethod
     def set_job_key(self) -> str:
         pass
 
-    def __get_job_key(self, job_key: str):
-        return self.base_key.format(job_key)
+    @staticmethod
+    def __get_job_key(job_key: str):
+        return BaseJob.base_key.format(job_key)
 
     def get_job_obj(self) -> dict:
         """
@@ -31,7 +31,7 @@ class BaseJob(metaclass=ABCMeta):
         :return: 任务字典
         """
         while True:
-            job_str = self.redis.lpop(self.__get_job_key(self.job_key))
+            job_str = Redis().db.lpop(self.__get_job_key(self.job_key))
             if job_str:
                 return json.loads(job_str)
             common.sleep(10)
@@ -46,5 +46,6 @@ class BaseJob(metaclass=ABCMeta):
 
         return self.set_job_by_key(self.job_key, job_entity)
 
-    def set_job_by_key(self, job_key, job_entity: BaseJobEntity):
-        return self.redis.rpush(self.__get_job_key(job_key), json.dumps(job_entity.to_dict()))
+    @classmethod
+    def set_job_by_key(cls, job_key, job_entity: BaseJobEntity):
+        return Redis().db.rpush(cls.__get_job_key(job_key), json.dumps(job_entity.to_dict()))

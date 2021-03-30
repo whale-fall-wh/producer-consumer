@@ -34,28 +34,23 @@ class ProductConsumer(BaseConsumer):
         'upgrade-insecure-requests': '1',
     }
 
-    def __init__(self):
-        self.http = None
-        self.proxy_engine = None
-        BaseConsumer.__init__(self)
-
     def set_job_key(self) -> str:
         return RedisListKeyEnum.product_crawl_job
 
     def run_job(self):
         Logger().info('product_consumer start')
-        self.http = Http()
-        self.proxy_engine = get_proxy_engine()
-        self.http.set_headers(self.headers)
+        http = Http()
+        proxy_engine = get_proxy_engine()
+        http.set_headers(self.headers)
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
                 job_entity = ProductJobEntity.instance(job_dict)
                 try:
-                    if self.proxy_engine:
+                    if proxy_engine:
                         # product 反扒比较苛刻，这边用了随机IP的代理
-                        self.http.set_proxy(self.proxy_engine.get_proxy())
-                    ProductCrawler(job_entity, self.http)
+                        http.set_proxy(proxy_engine.get_proxy())
+                    ProductCrawler(job_entity, http)
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
                     self.set_error_job(job_entity)

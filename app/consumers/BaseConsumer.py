@@ -23,9 +23,7 @@ class BaseConsumer(threading.Thread, BaseJob, metaclass=ABCMeta):
         pass
 
     def run(self):
-        # 多线程类中参数异常，代理IP非固定的时候，影响不大
-        # Logger().debug('{} 开启 {} 个线程'.format(self.__class__.__name__, self.threading_num))
-        # for i in range(self.threading_num):
-        #     t = threading.Thread(target=self.run_job)
-        #     t.start()
-        self.run_job()
+        Logger().debug('{} 开启 {} 个线程'.format(self.__class__.__name__, self.threading_num))
+        for i in range(self.threading_num):
+            t = threading.Thread(target=self.run_job)
+            t.start()

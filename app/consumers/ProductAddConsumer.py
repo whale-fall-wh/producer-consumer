@@ -35,27 +35,22 @@ class ProductAddConsumer(BaseConsumer):
         'upgrade-insecure-requests': '1',
     }
 
-    def __init__(self):
-        self.http = None
-        self.proxy_engine = None
-        BaseConsumer.__init__(self)
-
     def set_job_key(self) -> str:
         return RedisListKeyEnum.product_add_crawl_job
 
     def run_job(self):
         Logger().info('product_add_consumer start')
-        self.http = Http()
-        self.proxy_engine = get_proxy_engine()
-        self.http.set_headers(self.headers)
+        http = Http()
+        proxy_engine = get_proxy_engine()
+        http.set_headers(self.headers)
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
                 job_entity = ProductAddJobEntity.instance(job_dict)
                 try:
-                    if self.proxy_engine:
-                        self.http.set_proxy(self.proxy_engine.get_proxy())
-                    crawler = ProductAddCrawler(job_entity, self.http)
+                    if proxy_engine:
+                        http.set_proxy(proxy_engine.get_proxy())
+                    crawler = ProductAddCrawler(job_entity, http)
                     if crawler.productItem:
                         job_dict['product_item_id'] = crawler.productItem.id
                         new_job = ProductJobEntity.instance(job_dict)

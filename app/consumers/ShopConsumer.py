@@ -33,8 +33,6 @@ class ShopConsumer(BaseConsumer):
     }
 
     def __init__(self):
-        self.http = None
-        self.proxy_engine = None
         self.productItemRepository = ProductItemRepository()
         BaseConsumer.__init__(self)
 
@@ -43,17 +41,17 @@ class ShopConsumer(BaseConsumer):
 
     def run_job(self):
         Logger().info('shop_consumer start')
-        self.http = Http()
-        self.http.set_headers(self.headers)
-        self.proxy_engine = get_proxy_engine()
+        http = Http()
+        http.set_headers(self.headers)
+        proxy_engine = get_proxy_engine()
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
                 jobEntity = ShopJobEntity.instance(job_dict)
                 try:
-                    if self.proxy_engine:
-                        self.http.set_proxy(self.proxy_engine.get_proxy())
-                    crawl = ShopCrawler(jobEntity, self.http)
+                    if proxy_engine:
+                        http.set_proxy(proxy_engine.get_proxy())
+                    crawl = ShopCrawler(jobEntity, http)
                     if crawl.crawl_next_page:
                         jobEntity.page += 1
                         self.set_job(jobEntity)
