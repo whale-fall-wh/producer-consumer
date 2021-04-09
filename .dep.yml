@@ -48,7 +48,6 @@ production:
       user: ubuntu
       identity_file: ~/.ssh/id_rsa
   config:
-    restart_container: true
     debug: true
     from: ./
     keep_releases: 5
