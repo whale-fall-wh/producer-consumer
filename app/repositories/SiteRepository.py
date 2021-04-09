@@ -16,3 +16,9 @@ class SiteRepository(BaseRepository):
 
     def init_model(self) -> Type[CurrentModel]:
         return CurrentModel
+
+    def get_by_short_name(self, short_name: str):
+        with self.db.auto_commit_db():
+            site = self.db.session.query(CurrentModel).filter_by(short_name=short_name).first()
+
+        return site

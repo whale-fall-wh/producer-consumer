@@ -28,10 +28,9 @@ class ShopCrawler(BaseAmazonCrawler):
         self.shopItem = self.shopItemRepository.show(self.jobEntity.shop_item_id)
         if self.shopItem:
             self.shop = self.shopItem.shop
-            self.site = self.shopItem.site
-            if self.site and self.shop:
-                self.url = self.base_url.format(self.site.domain, self.shop.asin, self.jobEntity.page)
-                BaseAmazonCrawler.__init__(self, http=http, site=self.site)
+            if self.shopItem.site and self.shop:
+                self.url = self.base_url.format(self.shopItem.site.domain, self.shop.asin, self.jobEntity.page)
+                BaseAmazonCrawler.__init__(self, http=http, site=self.shopItem.site)
 
     def run(self):
         try:

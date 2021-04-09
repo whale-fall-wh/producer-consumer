@@ -48,4 +48,5 @@ class BaseJob(metaclass=ABCMeta):
 
     @classmethod
     def set_job_by_key(cls, job_key, job_entity: BaseJobEntity):
+        """可以再优化一下，挪到其他地方"""
         return Redis().db.rpush(cls.__get_job_key(job_key), json.dumps(job_entity.to_dict()))

@@ -9,10 +9,10 @@ from utils.Http import Http
 from app.crawlers.Captcha import Captcha
 from abc import ABCMeta, abstractmethod
 from app.models import Site
-from app.entities import SiteConfigEntity
+from .traits.AmazonSiteConfig import AmazonSiteConfig
 
 
-class BaseAmazonCrawler(metaclass=ABCMeta):
+class BaseAmazonCrawler(AmazonSiteConfig, metaclass=ABCMeta):
     """抓取亚马逊网站基类"""
 
     @abstractmethod     # 抽象方法，子类必须实现，类似interface
@@ -23,15 +23,9 @@ class BaseAmazonCrawler(metaclass=ABCMeta):
         # 是否需要验证码
         self.need_captcha_flag = False
         self.http = http
-        self.site = site
-        self.site_config_entity = SiteConfigEntity.instance(self.init_site_config())
-        self.run()
+        AmazonSiteConfig.__init__(self, site)
 
-    def init_site_config(self):
-        if self.site.site_config and type(self.site.site_config.config) == dict:
-            return self.site.site_config.config
-        else:
-            return {}
+        self.run()
 
     # TODO: 使用装饰器来做请求异常处理。验证码可以做三次尝试
     def request(self, method, url: str, **kwargs):

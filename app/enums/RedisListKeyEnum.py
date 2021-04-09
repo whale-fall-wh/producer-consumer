@@ -20,3 +20,5 @@ class RedisListKeyEnum(BaseEnum):
     shop_crawl_job = 'shop_crawl_job'
 
     keyword_crawl_job = 'keyword_crawl_job'
+
+    product_classify_crawl_job = 'product_classify_crawl_job'

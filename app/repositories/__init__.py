@@ -13,3 +13,4 @@ from app.repositories.ProductItemReviewRepository import ProductItemReviewReposi
 from app.repositories.ProductItemDailyDataRepository import ProductItemDailyDataRepository
 from app.repositories.ShopRepository import ShopRepository
 from app.repositories.ShopItemRepository import ShopItemRepository
+from app.repositories.KeywordRepository import KeywordRepository

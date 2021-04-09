@@ -7,4 +7,4 @@ from app.crawlers.ProductCrawler import ProductCrawler
 from app.crawlers.ProductReviewCrawler import ProductReviewCrawler
 from app.crawlers.ProductAddCrawler import ProductAddCrawler
 from app.crawlers.ShopCrawler import ShopCrawler
-
+from app.crawlers.ClassifyProductCrawler import ClassifyProductCrawler

@@ -52,7 +52,7 @@ class ProductService(object):
                 'feature_rate': product_item.feature_rate if product_item.feature_rate else {}
             }
         )
-        if product_item.site.name == '美亚':
+        if product_item.site.short_name == 'us':
             product_item.product.update({
                 'review_date': review_date,
                 'reviews': reviews

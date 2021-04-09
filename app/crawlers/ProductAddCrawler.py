@@ -28,11 +28,11 @@ class ProductAddCrawler(BaseAmazonCrawler):
         self.base_url = '{}/dp/{}'   # 亚马逊产品地址
         self.jobEntity = jobEntity
         self.product = self.productRepository.show(self.jobEntity.product_id)
-        self.site = self.siteRepository.show(self.jobEntity.site_id)
+        site = self.siteRepository.show(self.jobEntity.site_id)
         self.productItem = None
-        if self.product and self.site:
-            self.url = self.base_url.format(self.site.domain, self.product.asin)
-            BaseAmazonCrawler.__init__(self, http=http, site=self.site)
+        if self.product and site:
+            self.url = self.base_url.format(site.domain, self.product.asin)
+            BaseAmazonCrawler.__init__(self, http=http, site=site)
 
     def run(self):
         try:

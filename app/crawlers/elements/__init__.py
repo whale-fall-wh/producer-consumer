@@ -8,3 +8,4 @@ from app.crawlers.elements.ProductReviewListElement import ProductReviewListElem
 from app.crawlers.elements.ProductElement import ProductElement
 from app.crawlers.elements.ProductReviewItemElement import ProductReviewItemElement
 from app.crawlers.elements.ShopElement import ShopElement
+from app.crawlers.elements.SearchElement import SearchElement
