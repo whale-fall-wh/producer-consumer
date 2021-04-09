@@ -7,7 +7,7 @@ develop:
       user: admin
       identity_file: ~/.ssh/deployer.id_rsa
   config:
-    restart_container
+    restart_container: true
     debug: true
     from: ./
     keep_releases: 5
@@ -48,6 +48,7 @@ production:
       user: ubuntu
       identity_file: ~/.ssh/id_rsa
   config:
+    restart_container: true
     debug: true
     from: ./
     keep_releases: 5
