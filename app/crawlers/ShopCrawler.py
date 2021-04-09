@@ -51,8 +51,8 @@ class ShopCrawler(BaseAmazonCrawler):
                 self.shopItem.delete()
                 self.shop.delete()
             self.crawl_next_page = self.check_next_page()
-        except requests.exceptions.RequestException:
-            raise CrawlErrorException('review ' + self.url + '请求异常')
+        except requests.exceptions.RequestException as e:
+            raise CrawlErrorException('shop ' + self.url + ' 请求异常, ' + str(e))
 
     def check_next_page(self):
         return self.asin_list >= 16

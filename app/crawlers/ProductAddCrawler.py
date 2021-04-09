@@ -49,7 +49,7 @@ class ProductAddCrawler(BaseAmazonCrawler):
                 })
             else:
                 raise CrawlErrorException('页面请求异常, 地址 {}'.format(self.url))
-        except requests.exceptions.RequestException:
-            raise CrawlErrorException('product ' + self.url + '请求异常')
+        except requests.exceptions.RequestException as e:
+            raise CrawlErrorException('product ' + self.url + ' 请求异常, ' + str(e))
         except NotFoundException:
             pass

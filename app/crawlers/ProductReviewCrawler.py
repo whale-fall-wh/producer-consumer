@@ -68,8 +68,8 @@ class ProductReviewCrawler(BaseAmazonCrawler):
             if not self.crawl_next_page:
                 self.productItem.update({'crawl_date': time.strftime('%Y-%m-%d')})
 
-        except requests.exceptions.RequestException:
-            raise CrawlErrorException('review ' + self.url + '请求异常')
+        except requests.exceptions.RequestException as e:
+            raise CrawlErrorException('review ' + self.url + ' 请求异常, ' + str(e))
 
     def check_next_page(self):
         return self.review_count >= 10

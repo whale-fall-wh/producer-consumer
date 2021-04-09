@@ -14,6 +14,7 @@ from .elements import SearchElement
 from app.models import ProductItem, Product, ProductTypeProductRelation
 from app.BaseJob import BaseJob
 from app.exceptions import CrawlErrorException
+import requests
 
 
 class ClassifyProductCrawler(BaseAmazonCrawler):
@@ -36,24 +37,27 @@ class ClassifyProductCrawler(BaseAmazonCrawler):
             BaseAmazonCrawler.__init__(self, http=http, site=site)
 
     def run(self):
-        if self.site_config_entity.has_en_translate:
-            self.url = self.url + '?language=en_US'
-        Logger().debug('开始抓取{}关键字，地址 {}'.format(self.keyword.name, self.url))
-        rs = self.get(url=self.url)
-        shopElement = SearchElement(content=rs.content, site_config=self.site_config_entity)
-        if not shopElement.check_page(self.keyword.name):
-            raise CrawlErrorException("search页面抓取异常")
-        all_asin_list = getattr(shopElement, 'asin', [])
-        asin_list = list(filter(lambda x: x, all_asin_list))
-        for asin in asin_list:
-            productItem = self.save_asin(asin)
-            newJobEntity = ClassifyJobEntity.instance({'product_item_id': productItem.id})
-            BaseJob.set_job_by_key(RedisListKeyEnum.product_classify_crawl_job, newJobEntity)
-            self.jobEntity.current_num += 1
-            if self.jobEntity.current_num >= self.jobEntity.max_num:
-                break
-        self.asin_list = len(asin_list)
-        self.crawl_next_page = self.check_next_page()
+        try:
+            if self.site_config_entity.has_en_translate:
+                self.url = self.url + '?language=en_US'
+            Logger().debug('开始抓取{}关键字，地址 {}'.format(self.keyword.name, self.url))
+            rs = self.get(url=self.url)
+            shopElement = SearchElement(content=rs.content, site_config=self.site_config_entity)
+            if not shopElement.check_page(self.keyword.name):
+                raise CrawlErrorException("search页面抓取异常")
+            all_asin_list = getattr(shopElement, 'asin', [])
+            asin_list = list(filter(lambda x: x, all_asin_list))
+            for asin in asin_list:
+                productItem = self.save_asin(asin)
+                newJobEntity = ClassifyJobEntity.instance({'product_item_id': productItem.id})
+                BaseJob.set_job_by_key(RedisListKeyEnum.product_classify_crawl_job, newJobEntity)
+                self.jobEntity.current_num += 1
+                if self.jobEntity.current_num >= self.jobEntity.max_num:
+                    break
+            self.asin_list = len(asin_list)
+            self.crawl_next_page = self.check_next_page()
+        except requests.exceptions.RequestException as e:
+            raise CrawlErrorException('classify ' + self.url + ' 请求异常, ' + str(e))
 
     def save_asin(self, asin: str):
         product = Product.update_or_create({'asin': asin})
