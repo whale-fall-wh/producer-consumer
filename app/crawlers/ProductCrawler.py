@@ -44,6 +44,7 @@ class ProductCrawler(BaseAmazonCrawler):
             title = getattr(product_element, 'title')
             if title:
                 data = product_element.get_all_element()
+                Logger().info(data)
                 no_empty_data = dict()
                 for k, v in data.items():
                     if v:

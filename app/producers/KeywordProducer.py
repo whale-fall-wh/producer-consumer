@@ -15,7 +15,7 @@ class KeywordProducer(BaseProducer):
     """
     测试生成任务，实际应该在web段查询的时候新增一条记录，并插入队列
     """
-    # ignore = True
+    ignore = True
 
     def __init__(self):
         self.keywordRepository = KeywordRepository()
