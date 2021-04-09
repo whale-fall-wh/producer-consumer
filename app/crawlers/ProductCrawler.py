@@ -52,7 +52,7 @@ class ProductCrawler(BaseAmazonCrawler):
             else:
                 raise CrawlErrorException('页面请求异常, 地址 {}'.format(self.url))
         except requests.exceptions.RequestException:
-            raise CrawlErrorException('product ' + self.url + '请求异常')
+            raise CrawlErrorException('product ' + self.url + ' 请求异常')
 
     def save_data(self, no_empty_data: dict):
         rating = no_empty_data.get('rating', 0.0)

@@ -8,6 +8,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 import settings
 from utils.Singleton import ThreadSafeSingleton
+from decouple import config
 
 
 class Logger(metaclass=ThreadSafeSingleton):
@@ -18,17 +19,17 @@ class Logger(metaclass=ThreadSafeSingleton):
         # 日志输出目录、文件
         self.log_filename = settings.STORAGE_PATH + '/logs/logs'
         self.logger = logging.getLogger(self.log_filename)
-        self.logger.setLevel(logging.DEBUG)
+        self.logger.setLevel(config('FILE_LOG_LEVEL', logging.INFO))
 
         # 输出DEBUG级别日志到控制台
         self.sh = logging.StreamHandler()
-        self.sh.setLevel(logging.DEBUG)
+        self.sh.setLevel(config('CONSOLE_LOG_LEVEL', logging.DEBUG))
 
         # 输出INFO级别日志到文件
         self.tfh = TimedRotatingFileHandler(self.log_filename, when='midnight', backupCount=10, encoding='utf-8')
         self.tfh.suffix = '%Y-%m-%d'
         self.tfh.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s: %(message)s'))
-        self.tfh.setLevel(logging.INFO)
+        self.tfh.setLevel(config('FILE_LOG_LEVEL', logging.INFO))
         self.logger.addHandler(self.tfh)
 
     def __getattr__(self, key):
