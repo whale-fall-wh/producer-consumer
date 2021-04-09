@@ -12,6 +12,7 @@ from app.consumers import BaseConsumer
 from app.exceptions import NotFoundException, CrawlErrorException
 from app.enums import RedisListKeyEnum
 from app.entities import ProductJobEntity
+import requests
 
 
 class ProductConsumer(BaseConsumer):
@@ -57,4 +58,7 @@ class ProductConsumer(BaseConsumer):
                 except NotFoundException:
                     # 页面不存在，不做处理
                     pass
+                except requests.exceptions.ProxyError:
+                    # 代理异常
+                    Logger().error('代理异常')
                 common.sleep_random()

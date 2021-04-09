@@ -30,20 +30,21 @@ class ShopProducer(BaseProducer):
 
     def start(self):
         shopItems = self.shopItemRepository.all()
-        with Bar('product-review-producer...', max=len(shopItems), fill='#', suffix='%(percent)d%%') as bar:
-            for shopItem in shopItems:
-                shop = shopItem.shop
-                if shopItem.site:
-                    entity = CurrentJobEntity.instance({
-                        'shop_item_id': shopItem.id,
-                        'shop_id': shop.id,
-                        'shop_asin': shop.asin,
-                        'site_id': shopItem.site.id,
-                        'site_name': shopItem.site.name,
-                        'page': 1
-                    })
-                    self.set_job(entity)
-                    self.job_count += 1
-                bar.next()
+        if shopItems:
+            with Bar('product-review-producer...', max=len(shopItems), fill='#', suffix='%(percent)d%%') as bar:
+                for shopItem in shopItems:
+                    shop = shopItem.shop
+                    if shopItem.site:
+                        entity = CurrentJobEntity.instance({
+                            'shop_item_id': shopItem.id,
+                            'shop_id': shop.id,
+                            'shop_asin': shop.asin,
+                            'site_id': shopItem.site.id,
+                            'site_name': shopItem.site.name,
+                            'page': 1
+                        })
+                        self.set_job(entity)
+                        self.job_count += 1
+                    bar.next()
 
         Logger().info('shop 开始投放任务,{}个产品, 共添加{}个任务'.format(len(shopItems), self.job_count))

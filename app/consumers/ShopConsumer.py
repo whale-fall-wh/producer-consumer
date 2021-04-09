@@ -14,6 +14,7 @@ import common
 from app.entities import ShopJobEntity, ProductJobEntity, ProductReviewJobEntity
 from app.crawlers import ShopCrawler
 from app.repositories import ProductItemRepository
+import requests
 
 
 class ShopConsumer(BaseConsumer):
@@ -63,6 +64,9 @@ class ShopConsumer(BaseConsumer):
                 except NotFoundException:
                     # 页面不存在，不做处理
                     pass
+                except requests.exceptions.ProxyError:
+                    # 代理异常
+                    Logger().error('代理异常')
                 common.sleep_random()
 
     def crawl_shop_product(self, jobEntity: ShopJobEntity):

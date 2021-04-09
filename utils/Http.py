@@ -5,7 +5,7 @@
 # @Software: PyCharm
 
 import requests
-from utils import Logger
+from utils.Logger import Logger
 
 
 class Http(object):
@@ -36,7 +36,7 @@ class Http(object):
     def set_proxy(self, proxy=None):
         if proxy is not None:
             self.http.proxies = proxy
-            Logger().debug(self.http.proxies)
+            Logger().debug('获取到的代理为：' + self.http.proxies.__str__())
 
     def set_headers(self, headers: dict):
         self.http.headers = headers

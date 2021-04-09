@@ -13,6 +13,7 @@ from app.proxies import get_proxy_engine
 from app.crawlers import ClassifyProductCrawler
 import common
 from app.exceptions import NotFoundException, CrawlErrorException
+import requests
 
 
 class KeywordConsumer(BaseConsumer):
@@ -54,6 +55,9 @@ class KeywordConsumer(BaseConsumer):
                 except NotFoundException:
                     # 页面不存在，不做处理
                     pass
+                except requests.exceptions.ProxyError:
+                    # 代理异常
+                    Logger().error('代理异常')
                 common.sleep_random()
 
     def set_job_key(self) -> str:

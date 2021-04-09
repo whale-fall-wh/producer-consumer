@@ -13,6 +13,7 @@ from app.entities import ProductReviewJobEntity
 import common
 from app.exceptions import CrawlErrorException, NotFoundException
 from app.crawlers import ProductReviewCrawler
+import requests
 
 
 class ProductReviewConsumer(BaseConsumer):
@@ -61,4 +62,7 @@ class ProductReviewConsumer(BaseConsumer):
                 except NotFoundException:
                     # 页面不存在，不做处理
                     pass
+                except requests.exceptions.ProxyError:
+                    # 代理异常
+                    Logger().error('代理异常')
                 common.sleep_random()

@@ -13,6 +13,7 @@ from app.enums import RedisListKeyEnum
 from app.entities import ProductJobEntity, ProductAddJobEntity
 from app.crawlers import ProductAddCrawler
 import common
+import requests
 
 
 class ProductAddConsumer(BaseConsumer):
@@ -58,6 +59,9 @@ class ProductAddConsumer(BaseConsumer):
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
                     self.set_error_job(job_entity)
+                except requests.exceptions.ProxyError:
+                    # 代理异常
+                    Logger().error('代理异常')
                 except NotFoundException:
                     # 页面不存在，不做处理
                     pass
