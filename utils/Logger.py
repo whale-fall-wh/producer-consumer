@@ -19,7 +19,7 @@ class Logger(metaclass=ThreadSafeSingleton):
         # 日志输出目录、文件
         self.log_filename = settings.STORAGE_PATH + '/logs/logs'
         self.logger = logging.getLogger(self.log_filename)
-        self.logger.setLevel(config('FILE_LOG_LEVEL', logging.INFO))
+        self.logger.setLevel(logging.DEBUG)
 
         # 输出DEBUG级别日志到控制台
         self.sh = logging.StreamHandler()
@@ -63,3 +63,13 @@ class Logger(metaclass=ThreadSafeSingleton):
     def critical(self, message):
         self.set_format('\033[0;35m%s\033[0m')
         self.logger.critical(message)
+
+
+if __name__ == '__main__':
+    logger = Logger()
+    logger.debug('1')
+    logger.info('2')
+    # logger.warning('3')
+    # logger.error('4')
+    # logger.critical('5')
+
