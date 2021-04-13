@@ -65,7 +65,7 @@ class ProductReviewCrawler(BaseAmazonCrawler):
                         self.save(data)
                 self.productService.update_product_item_daily_data(self.productItem)
 
-            self.crawl_next_page = self.check_next_page()
+            self.crawl_next_page = self.check_next_page() and self.crawl_next_page
             if not self.crawl_next_page:
                 self.productItem.update({'crawl_date': time.strftime('%Y-%m-%d')})
 
