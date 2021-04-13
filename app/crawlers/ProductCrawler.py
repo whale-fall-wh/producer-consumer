@@ -13,6 +13,7 @@ from app.entities import ProductJobEntity
 from app.repositories import ProductItemRepository, ProductRepository
 from app.services import ProductService
 from copy import deepcopy
+from decouple import config
 
 
 class ProductCrawler(BaseAmazonCrawler):
@@ -44,6 +45,8 @@ class ProductCrawler(BaseAmazonCrawler):
             title = getattr(product_element, 'title')
             if title:
                 data = product_element.get_all_element()
+                img_url = product_element.get_img()
+                data['img'] = self.save_img(img_url)
                 Logger().debug('product data ' + data.__str__())
                 no_empty_data = dict()
                 for k, v in data.items():
@@ -87,3 +90,14 @@ class ProductCrawler(BaseAmazonCrawler):
             return ["{} in {}".format(rank, name) for name, rank in classify_rank.items()]
         else:
             return []
+
+    def save_img(self, img_url):
+        try:
+            rs = requests.post('{}/api/v1/save-img'.format(config("CPA_DOMAIN", 'http://cpa.leadingtechgroup.com/')), data={
+                'product_id': self.product.id,
+                'site_id': self.site.id,
+                'img_url': img_url
+            })
+            return rs.json().get('data', {}).get('path', '')
+        except:
+            return ''

@@ -41,6 +41,11 @@ class ProductElement(ProductDetailElement):
 
         return 0
 
+    def get_img(self):
+        img_url = self.html.xpath('//*[@id="landingImage"]/@data-old-hires')
+
+        return ''.join(img_url)
+
     def get_element_classify_rank(self):
         product_str = self.__get_product_detail_str()
         if not product_str:
