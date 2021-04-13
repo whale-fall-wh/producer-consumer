@@ -99,13 +99,13 @@ class ProductReviewItemElement(BaseElement):
                 rs = self.__deal_with_date(review_date, config)
                 if rs:
                     return rs
+        else:
+            if not configs:
+                return None
 
-        if not configs:
+            review_date = ''.join(review_date.split(configs)[-1:])
+            review_date = self.translate.available_date(review_date)
+            if review_date:
+                return review_date.strftime('%Y-%m-%d')
             return None
-
-        review_date = ''.join(review_date.split(configs)[-1:])
-        review_date = self.translate.available_date(review_date)
-        if review_date:
-            return review_date.strftime('%Y-%m-%d')
-
         return None
