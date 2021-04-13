@@ -10,13 +10,14 @@ from utils import Logger, Http
 from app.proxies import get_proxy_engine
 from app.exceptions import NotFoundException, CrawlErrorException
 from app.enums import RedisListKeyEnum
-from app.entities import ProductJobEntity, ProductAddJobEntity
+from app.entities import ProductJobEntity, ProductAddJobEntity, ProductReviewJobEntity
 from app.crawlers import ProductAddCrawler
 import common
 import requests
 
 
 class ProductAddConsumer(BaseConsumer):
+    threading_num = 1
     """
     添加新的asin时，插入对应的任务，该消费者会判断某个站点中的产品是否存在，如果存在，则添加对应站点的asin数据，并产生新的任务
     """
@@ -39,8 +40,9 @@ class ProductAddConsumer(BaseConsumer):
                     crawler = ProductAddCrawler(jobEntity, http)
                     if crawler.productItem:
                         job_dict['product_item_id'] = crawler.productItem.id
-                        new_job = ProductJobEntity.instance(job_dict)
-                        self.set_job_by_key(RedisListKeyEnum.product_crawl_job, new_job)
+                        self.set_job_by_key(RedisListKeyEnum.product_crawl_job, ProductJobEntity.instance(job_dict))
+                        self.set_job_by_key(RedisListKeyEnum.product_review_crawl_job,
+                                            ProductReviewJobEntity.instance(job_dict))
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
                     self.set_error_job(jobEntity)

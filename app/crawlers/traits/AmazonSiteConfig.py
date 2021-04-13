@@ -17,8 +17,8 @@ class AmazonSiteConfig(object):
         self.site_config_entity = SiteConfigEntity.instance(self.init_site_config(site))
         if self.site_config_entity.has_en_translate and site.short_name != 'us':
             siteEn = SiteRepository().get_by_short_name('us')
-            if siteEn:
-                self.site_config_entity = SiteConfigEntity.instance(siteEn.__dict__)
+            if siteEn and siteEn.site_config:
+                self.site_config_entity = SiteConfigEntity.instance(siteEn.site_config.config)
 
     @staticmethod
     def init_site_config(site: Site):
