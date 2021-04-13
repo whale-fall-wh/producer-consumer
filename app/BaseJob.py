@@ -11,6 +11,7 @@ from app.entities.BaseJobEntity import BaseJobEntity
 from decouple import config
 
 
+# 用redis队列实现，也可以用rabbitMQ实现更复杂的场景
 class BaseJob(metaclass=ABCMeta):
     base_key = config('REDIS_PREFIX', 'cpa:') + 'job:{}'
 

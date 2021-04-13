@@ -36,6 +36,9 @@ class BaseElement(object):
 
         return rs
 
+    def get_element(self, key, default=None):
+        return self.get_all_element().get(key, default)
+
     def __yield_all_element_function(self):
         for attr in dir(self):
             if attr.startswith(self._get_element_prefix):

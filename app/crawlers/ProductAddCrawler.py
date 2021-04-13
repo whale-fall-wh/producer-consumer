@@ -40,7 +40,7 @@ class ProductAddCrawler(BaseAmazonCrawler):
                 self.url = self.url + '?language=en_US'
             Logger().debug('新增asin{}开始抓取，地址 {}'.format(self.product.asin, self.url))
             rs = self.get(url=self.url)
-            product_element = ProductElement(content=rs.content, site_config=self.site_config_entity)
+            product_element = ProductElement(content=rs.content, siteConfig=self.site_config_entity)
             title = getattr(product_element, 'title')
             if title:
                 self.productItem = self.productItemRepository.update_or_create({

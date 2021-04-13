@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 # @Time : 2021/4/7 10:02 上午 
 # @Author : wangHua
-# @File : ClassifyProductCrawler.py 
+# @File : KeywordCrawler.py
 # @Software: PyCharm
 
 from .BaseAmazonCrawler import BaseAmazonCrawler
 from utils import Http, Logger
-from app.entities import ClassifyProductJobEntity, ClassifyJobEntity
+from app.entities import KeywordJobEntity, ProductClassifyJobEntity
 from app.enums import ProductTypeEnum, RedisListKeyEnum
 from app.repositories import ProductItemRepository, KeywordRepository, SiteRepository
 from .elements import SearchElement
@@ -17,12 +17,12 @@ from app.exceptions import CrawlErrorException
 import requests
 
 
-class ClassifyProductCrawler(BaseAmazonCrawler):
+class KeywordCrawler(BaseAmazonCrawler):
     """
     keyword在被添加的时候，redis相关队列插入任务即可触发抓取
     """
     # ignore = True
-    def __init__(self, jobEntity: ClassifyProductJobEntity, http: Http):
+    def __init__(self, jobEntity: KeywordJobEntity, http: Http):
         self.asin_list = 0
         self.jobEntity = jobEntity
         self.crawl_next_page = True
@@ -49,7 +49,10 @@ class ClassifyProductCrawler(BaseAmazonCrawler):
             asin_list = list(filter(lambda x: x, all_asin_list))
             for asin in asin_list:
                 productItem = self.save_asin(asin)
-                newJobEntity = ClassifyJobEntity.instance({'product_item_id': productItem.id})
+                newJobEntity = ProductClassifyJobEntity.instance({
+                    'product_item_id': productItem.id,
+                    'keyword_id': self.keyword.id
+                })
                 BaseJob.set_job_by_key(RedisListKeyEnum.product_classify_crawl_job, newJobEntity)
                 self.jobEntity.current_num += 1
                 if self.jobEntity.current_num >= self.jobEntity.max_num:

@@ -21,26 +21,11 @@ class ProductAddConsumer(BaseConsumer):
     添加新的asin时，插入对应的任务，该消费者会判断某个站点中的产品是否存在，如果存在，则添加对应站点的asin数据，并产生新的任务
     """
     # ignore = True     # 忽略该消费者
-    headers = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
-                  ',application/signed-exchange;v=b3;q=0.9',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) '
-                      'Chrome/89.0.4389.82 Safari/537.36',
-        'accept-encoding': 'gzip, deflate, br',
-        'accept-language': 'zh-CN,zh;q=0.9',
-        'cache-control': 'max-age=0',
-        'sec-fetch-dest': 'document',
-        'sec-fetch-mode': 'navigate',
-        'sec-fetch-site': 'none',
-        'sec-fetch-user': '?1',
-        'upgrade-insecure-requests': '1',
-    }
 
     def set_job_key(self) -> str:
         return RedisListKeyEnum.product_add_crawl_job
 
     def run_job(self):
-        Logger().info('product_add_consumer start')
         http = Http()
         proxy_engine = get_proxy_engine()
         http.set_headers(self.headers)

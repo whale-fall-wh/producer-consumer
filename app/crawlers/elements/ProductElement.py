@@ -3,7 +3,7 @@
 # @Author : wangHua
 # @Software: PyCharm
 
-from app.crawlers.elements.BaseElement import BaseElement
+from app.crawlers.elements.ProductDetailElement import ProductDetailElement
 from app.entities import SiteConfigEntity
 import re
 import html
@@ -12,31 +12,30 @@ from app.translates import get_translate_by_locale
 from utils import Logger
 
 
-class ProductElement(BaseElement):
+class ProductElement(ProductDetailElement):
     """
     产品页面元素
     """
 
-    def __init__(self, content: bytes, site_config: SiteConfigEntity):
-        self.site_config = site_config
-        self.translate = get_translate_by_locale(self.site_config.key)
+    def __init__(self, content: bytes, siteConfig: SiteConfigEntity):
+        self.translate = get_translate_by_locale(siteConfig.key)
         if self.translate is None:
             self.translate = get_translate_by_locale('en')
-            Logger().warning('未获取到 {} 翻译器，已使用en翻译，请及时配置'.format(self.site_config.key))
-        BaseElement.__init__(self, content)
+            Logger().warning('未获取到 {} 翻译器，已使用en翻译，请及时配置'.format(siteConfig.key))
+        ProductDetailElement.__init__(self, content, siteConfig)
 
     def get_element_title(self) -> [str, None]:
-        elements = self.html.xpath(self.site_config.product_title_xpath)
+        elements = self.html.xpath(self.siteConfig.product_title_xpath)
 
         return ''.join(elements).strip()
 
     def get_element_price(self) -> str:
-        elements = self.html.xpath(self.site_config.product_price_xpath)
+        elements = self.html.xpath(self.siteConfig.product_price_xpath)
 
-        return replace_multi(''.join(elements).strip(), [' ', '&nbsp;', self.site_config.product_price_unit], '')
+        return replace_multi(''.join(elements).strip(), [' ', '&nbsp;', self.siteConfig.product_price_unit], '')
 
     def get_element_rating(self) -> float:
-        elements = self.html.xpath(self.site_config.product_rating_xpath)
+        elements = self.html.xpath(self.siteConfig.product_rating_xpath)
         if elements:
             return self.__deal_with_rating(elements[0].strip())
 
@@ -48,7 +47,7 @@ class ProductElement(BaseElement):
             return {}
 
         matches = []
-        for classify_rank_config in self.site_config.product_classify_rank:
+        for classify_rank_config in self.siteConfig.product_classify_rank:
             matches = re.findall(self.__deal_re_pattern(classify_rank_config), product_str)
             if matches:
                 break
@@ -68,7 +67,7 @@ class ProductElement(BaseElement):
             return None
 
         matches = []
-        for product_available_date in self.site_config.product_available_date:
+        for product_available_date in self.siteConfig.product_available_date:
             matches = re.findall(self.__deal_re_pattern(product_available_date), product_str)
             if matches:
                 break
@@ -86,18 +85,10 @@ class ProductElement(BaseElement):
         # 异步接口
         return {}
 
-    def __get_product_detail(self):
-        # 可能返回假数据，测试用本地IP是空，用代理正常返回数据
-        for xpath in self.site_config.product_detail_xpath:
-            element = self.html.xpath(xpath)
-            if element:
-                return self.get_html(element[0])
-
-        return ''
-
     def __get_product_detail_str(self):
         # 取出html各种标签，实体等
-        product_html = self.__get_product_detail()
+        element = self._get_product_detail_element()
+        product_html = self.get_html(element) if element else ''
         if not product_html:
             return product_html
 
@@ -116,8 +107,8 @@ class ProductElement(BaseElement):
         return classify_rank_config[1: len(classify_rank_config)-2]
 
     def __deal_with_rank(self, ranks: list):
-        splits = self.site_config.product_rank_split
-        replace = self.site_config.product_rank_replace
+        splits = self.siteConfig.product_rank_split
+        replace = self.siteConfig.product_rank_replace
         if type(splits) == str:
             splits = [splits]
         rs = dict()
@@ -134,5 +125,5 @@ class ProductElement(BaseElement):
 
     def __deal_with_rating(self, rating):
 
-        rating = replace_multi(rating, self.site_config.product_rating_split, '').strip()
+        rating = replace_multi(rating, self.siteConfig.product_rating_split, '').strip()
         return str2float(rating, 1)

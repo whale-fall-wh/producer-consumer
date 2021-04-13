@@ -31,7 +31,7 @@ class ShopProducer(BaseProducer):
     def start(self):
         shopItems = self.shopItemRepository.all()
         if shopItems:
-            with Bar('product-review-producer...', max=len(shopItems), fill='#', suffix='%(percent)d%%') as bar:
+            with Bar('店铺任务生产...', max=len(shopItems), fill='#', suffix='%(percent)d%%') as bar:
                 for shopItem in shopItems:
                     shop = shopItem.shop
                     if shopItem.site:

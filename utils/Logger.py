@@ -63,13 +63,3 @@ class Logger(metaclass=ThreadSafeSingleton):
     def critical(self, message):
         self.set_format('\033[0;35m%s\033[0m')
         self.logger.critical(message)
-
-
-if __name__ == '__main__':
-    logger = Logger()
-    logger.debug('1')
-    logger.info('2')
-    # logger.warning('3')
-    # logger.error('4')
-    # logger.critical('5')
-

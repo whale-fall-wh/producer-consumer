@@ -62,6 +62,14 @@ product_type_product_relations = Table(
               nullable=False, primary_key=True),
 )
 
+product_classify_product_item_relations = Table(
+    "product_classify_product_item_relations",
+    db.Model.metadata,
+    db.Column("product_item_id", db.BigInt(unsigned=True), db.ForeignKey("product_items.id"), nullable=False, primary_key=True),
+    db.Column("product_classify_id", db.BigInt(unsigned=True), db.ForeignKey("product_classifies.id"),
+              nullable=False, primary_key=True),
+)
+
 
 class Brand(BaseModel):
     __table_args__ = {'extend_existing': True}
@@ -95,7 +103,7 @@ class Classify(BaseModel):
 
 class ClassifyCrawlProgress(BaseModel):
     __table_args__ = {'extend_existing': True}
-    __tablename__ = "classify_crawl_progresses"
+    __tablename__ = "classify_crawl_progress"
 
     id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
     model_id = db.Column(db.BigInt(unsigned=True), nullable=False)
@@ -157,6 +165,8 @@ class ProductItem(BaseModel):
     site = relationship('Site', back_populates="product_items")
     daily_ranks = relationship('ProductItemDailyRank', back_populates="product_item")
     product_item_reviews = relationship('ProductItemReview', back_populates="product_item")
+    all_crawl_date = relationship('ProductItemCrawlDate', backref="all_crawl_date", uselist=False)
+    relations = relationship("ProductClassify", secondary=product_classify_product_item_relations, backref='product_items')
 
 
 class ProductItemCrawlDate(BaseModel):
@@ -339,6 +349,30 @@ class SiteConfig(BaseModel):
     id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
     site_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('sites.id'))
     config = db.Column(db.JSON, nullable=True)
+
+
+class ProductClassify(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'product_classifies'
+
+    id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
+    name = db.Column(db.String(255), default='')
+    url = db.Column(db.String(255), default='')
+    url_id = db.Column(db.String(255), default='')
+    classify_name = db.Column(db.String(255), default='')
+    _lft = db.Column(db.BigInt(unsigned=True), default=0)
+    _rgt = db.Column(db.BigInt(unsigned=True), default=0)
+    parent_id = db.Column(db.BigInt(unsigned=True), nullable=True)
+    created_at = db.Column(db.DateTime, default=func.now())
+    updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
+
+
+class ProductClassifyProductItemRelation(BaseModel):
+    __table_args__ = {'extend_existing': True}
+    __tablename__ = 'product_classify_product_item_relations'
+
+    product_item_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('product_items.id'), primary_key=True)
+    product_classify_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey('product_classifies.id'), primary_key=True)
 
 
 if __name__ == '__main__':

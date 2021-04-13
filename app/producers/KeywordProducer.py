@@ -8,7 +8,7 @@
 from app.producers.BaseProducer import BaseProducer
 from app.enums import RedisListKeyEnum
 from app.repositories import KeywordRepository
-from app.entities import ClassifyProductJobEntity
+from app.entities import KeywordJobEntity
 
 
 class KeywordProducer(BaseProducer):
@@ -27,7 +27,7 @@ class KeywordProducer(BaseProducer):
     def start(self):
         keywords = self.keywordRepository.all()
         for keyword in keywords:
-            jobEntity = ClassifyProductJobEntity.instance({
+            jobEntity = KeywordJobEntity.instance({
                 'site_id': 1,
                 'site_name': '',
                 'keyword_id': keyword.id,

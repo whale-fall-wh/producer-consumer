@@ -3,13 +3,14 @@
 # @Author : wangHua
 # @Software: PyCharm
 
-from .elements.AmazonExceptionElement import AmazonExceptionElement
+from .elements import AmazonExceptionElement
 from app.exceptions import NotFoundException, CrawlErrorException
 from utils.Http import Http
 from app.crawlers.Captcha import Captcha
 from abc import ABCMeta, abstractmethod
 from app.models import Site
 from .traits.AmazonSiteConfig import AmazonSiteConfig
+from utils import Logger
 
 
 class BaseAmazonCrawler(AmazonSiteConfig, metaclass=ABCMeta):
@@ -20,16 +21,13 @@ class BaseAmazonCrawler(AmazonSiteConfig, metaclass=ABCMeta):
         pass
 
     def __init__(self, http: Http, site: Site):
-        # 是否需要验证码
-        self.need_captcha_flag = False
         self.http = http
         AmazonSiteConfig.__init__(self, site)
 
         self.run()
 
-    # TODO: 使用装饰器来做请求异常处理。验证码可以做三次尝试
-    def request(self, method, url: str, **kwargs):
-
+    # TODO: 使用装饰器来做请求异常处理。
+    def request(self, method, url: str, request_time=1, **kwargs):
         rs = self.http.request(method=method, url=url, **kwargs)
         exception = AmazonExceptionElement(content=rs.content, site_config_entity=self.site_config_entity)
         if exception.error_500():
@@ -37,10 +35,10 @@ class BaseAmazonCrawler(AmazonSiteConfig, metaclass=ABCMeta):
         if exception.not_found():
             raise NotFoundException('{} not_found'.format(url))
 
-        self.need_captcha_flag = exception.need_validate()
-        if self.need_captcha_flag:
+        if exception.need_validate() and request_time <= 3:
             Captcha(self.site.domain, http=self.http, html=rs.text)
-            rs = self.http.request(method=method, url=url, **kwargs)
+            Logger().info("尝试第{}次重试".format(request_time))
+            rs = self.request(method=method, url=url, request_time=request_time+1, **kwargs)
 
         return rs
 
@@ -48,4 +46,4 @@ class BaseAmazonCrawler(AmazonSiteConfig, metaclass=ABCMeta):
         return self.request(method='GET', url=url, **kwargs)
 
     def post(self, url: str, **kwargs):
-        return self.request(method='GET', url=url, **kwargs)
+        return self.request(method='POST', url=url, **kwargs)

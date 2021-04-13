@@ -109,8 +109,3 @@ class ProductReviewItemElement(BaseElement):
             return review_date.strftime('%Y-%m-%d')
 
         return None
-
-
-if __name__ == '__main__':
-    a = []
-    print(''.join(a[-1:]))

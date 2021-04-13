@@ -14,3 +14,5 @@ from app.repositories.ProductItemDailyDataRepository import ProductItemDailyData
 from app.repositories.ShopRepository import ShopRepository
 from app.repositories.ShopItemRepository import ShopItemRepository
 from app.repositories.KeywordRepository import KeywordRepository
+from app.repositories.ClassifyCrawlProgressRepository import ClassifyCrawlProgressRepository
+from app.repositories.ProductClassifyRepository import ProductClassifyRepository

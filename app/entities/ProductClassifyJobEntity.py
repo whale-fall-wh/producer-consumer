@@ -6,13 +6,12 @@
 # @Software: PyCharm
 
 from app.entities.BaseJobEntity import BaseJobEntity
-from app.enums import RedisListKeyEnum
 
 
-class ClassifyJobEntity(BaseJobEntity):
+class ProductClassifyJobEntity(BaseJobEntity):
 
     product_item_id = 0
+    keyword_id = 0
 
     def set_job_type(self):
         return ''
-

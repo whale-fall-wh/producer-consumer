@@ -8,7 +8,7 @@
 from .BaseJobEntity import BaseJobEntity
 
 
-class ClassifyProductJobEntity(BaseJobEntity):
+class KeywordJobEntity(BaseJobEntity):
 
     site_id = 0
     site_name = ''

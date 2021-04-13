@@ -40,11 +40,10 @@ class ProductCrawler(BaseAmazonCrawler):
                 self.url = self.url + '?language=en_US'
             Logger().debug('开始抓取{}产品，地址 {}'.format(self.product.asin, self.url))
             rs = self.get(url=self.url)
-            product_element = ProductElement(content=rs.content, site_config=self.site_config_entity)
+            product_element = ProductElement(content=rs.content, siteConfig=self.site_config_entity)
             title = getattr(product_element, 'title')
             if title:
                 data = product_element.get_all_element()
-                Logger().info(data)
                 no_empty_data = dict()
                 for k, v in data.items():
                     if v:
