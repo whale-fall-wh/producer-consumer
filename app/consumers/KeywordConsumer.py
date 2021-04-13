@@ -44,6 +44,9 @@ class KeywordConsumer(BaseConsumer):
                 except requests.exceptions.ProxyError:
                     # 代理异常
                     Logger().error('代理异常')
+                except Exception as e:
+                    self.set_error_job(jobEntity)
+                    Logger().error('其他异常, -' + str(e))
                 common.sleep_random()
 
     def set_job_key(self) -> str:

@@ -88,7 +88,7 @@ class ProductElement(ProductDetailElement):
     def __get_product_detail_str(self):
         # 取出html各种标签，实体等
         element = self._get_product_detail_element()
-        product_html = self.get_html(element) if element else ''
+        product_html = self.get_html(element) if element is not None else ''
         if not product_html:
             return product_html
 

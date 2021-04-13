@@ -32,22 +32,25 @@ class ProductAddConsumer(BaseConsumer):
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
-                job_entity = ProductAddJobEntity.instance(job_dict)
+                jobEntity = ProductAddJobEntity.instance(job_dict)
                 try:
                     if proxy_engine:
                         http.set_proxy(proxy_engine.get_proxy())
-                    crawler = ProductAddCrawler(job_entity, http)
+                    crawler = ProductAddCrawler(jobEntity, http)
                     if crawler.productItem:
                         job_dict['product_item_id'] = crawler.productItem.id
                         new_job = ProductJobEntity.instance(job_dict)
                         self.set_job_by_key(RedisListKeyEnum.product_crawl_job, new_job)
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
-                    self.set_error_job(job_entity)
+                    self.set_error_job(jobEntity)
                 except requests.exceptions.ProxyError:
                     # 代理异常
                     Logger().error('代理异常')
                 except NotFoundException:
                     # 页面不存在，不做处理
                     pass
+                except Exception as e:
+                    self.set_error_job(jobEntity)
+                    Logger().error('其他异常, -' + str(e))
                 common.sleep_random()

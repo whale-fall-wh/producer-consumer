@@ -32,21 +32,24 @@ class ProductReviewConsumer(BaseConsumer):
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
-                job_entity = ProductReviewJobEntity.instance(job_dict)
+                jobEntity = ProductReviewJobEntity.instance(job_dict)
                 try:
                     if proxy_engine:
                         http.set_proxy(proxy_engine.get_proxy())
-                    crawl = ProductReviewCrawler(job_entity, http)
+                    crawl = ProductReviewCrawler(jobEntity, http)
                     if crawl.crawl_next_page:
-                        job_entity.page += 1
-                        self.set_job(job_entity)
+                        jobEntity.page += 1
+                        self.set_job(jobEntity)
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
-                    self.set_error_job(job_entity)
+                    self.set_error_job(jobEntity)
                 except NotFoundException:
                     # 页面不存在，不做处理
                     pass
                 except requests.exceptions.ProxyError:
                     # 代理异常
                     Logger().error('代理异常')
+                except Exception as e:
+                    self.set_error_job(jobEntity)
+                    Logger().error('其他异常, -' + str(e))
                 common.sleep_random()

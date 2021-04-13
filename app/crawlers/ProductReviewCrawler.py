@@ -50,6 +50,7 @@ class ProductReviewCrawler(BaseAmazonCrawler):
             review_list_element = ProductReviewListElement(content=rs.content, site_config=self.site_config_entity)
             review_list = getattr(review_list_element, 'review_list')
             if review_list:
+                Logger().debug('reviews element ' + review_list.__str__())
                 for review_item in review_list:
                     item_content = review_list_element.get_content(review_item)
                     review_item_element = ProductReviewItemElement(item_content, self.site_config_entity)

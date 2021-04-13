@@ -30,19 +30,22 @@ class ProductConsumer(BaseConsumer):
         while True:
             job_dict = self.get_job_obj()
             if job_dict:
-                job_entity = ProductJobEntity.instance(job_dict)
+                jobEntity = ProductJobEntity.instance(job_dict)
                 try:
                     if proxy_engine:
                         # product 反扒比较苛刻，这边用了随机IP的代理
                         http.set_proxy(proxy_engine.get_proxy())
-                    ProductCrawler(job_entity, http)
+                    ProductCrawler(jobEntity, http)
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
-                    self.set_error_job(job_entity)
+                    self.set_error_job(jobEntity)
                 except NotFoundException:
                     # 页面不存在，不做处理
                     pass
                 except requests.exceptions.ProxyError:
                     # 代理异常
                     Logger().error('代理异常')
+                except Exception as e:
+                    self.set_error_job(jobEntity)
+                    Logger().error('其他异常, -' + str(e))
                 common.sleep_random()
