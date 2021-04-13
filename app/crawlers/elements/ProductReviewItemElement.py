@@ -42,9 +42,8 @@ class ProductReviewItemElement(BaseElement):
     def get_element_date(self):
         elements = self.html.xpath(self.site_config.product_review_date_xpath)
         review_date = elements[0].strip() if len(elements) else None
-        review_date = self.__deal_with_date(review_date, self.site_config.product_review_data_split)
 
-        return review_date if review_date is not None else '0000-00-00'
+        return self.__deal_with_date(review_date, self.site_config.product_review_data_split)
 
     def get_element_rating(self):
         elements = self.html.xpath(self.site_config.product_review_rating_xpath)

@@ -8,7 +8,7 @@
 from app.translates.BaseTranslate import BaseTranslate
 
 
-class UkTranslate(BaseTranslate):
+class EsTranslate(BaseTranslate):
     key = 'es'
 
     def _init_locale(self):
