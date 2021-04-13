@@ -46,6 +46,7 @@ class BaseTranslate(metaclass=ABCMeta):
             return None
 
     def available_date(self, time_str):
+        time_str = self.pre_handle(time_str)
         if type(self.time_format) == str:
             return self.get_time_from_locale_format(time_str, self.time_format, self.locale)
         elif type(self.time_format) == list:
@@ -55,3 +56,7 @@ class BaseTranslate(metaclass=ABCMeta):
                     return rs
 
         return None
+
+    def pre_handle(self, time_str):
+        return time_str
+

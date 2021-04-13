@@ -20,7 +20,7 @@ class ProductReviewConsumer(BaseConsumer):
     """
     住区评论信息
     """
-    threading_num = 3
+    threading_num = 1
 
     def set_job_key(self) -> str:
         return RedisListKeyEnum.product_review_crawl_job

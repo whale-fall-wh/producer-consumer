@@ -13,3 +13,6 @@ class UkTranslate(BaseTranslate):
 
     def _init_locale(self):
         return 'es_ES'
+
+    def pre_handle(self, time_str: str):
+        return time_str.replace(' de ', ' ')

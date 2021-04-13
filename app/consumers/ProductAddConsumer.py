@@ -40,7 +40,7 @@ class ProductAddConsumer(BaseConsumer):
                     crawler = ProductAddCrawler(jobEntity, http)
                     if crawler.productItem:
                         job_dict['product_item_id'] = crawler.productItem.id
-                        self.set_job_by_key(RedisListKeyEnum.product_crawl_job, ProductJobEntity.instance(job_dict))
+                        # self.set_job_by_key(RedisListKeyEnum.product_crawl_job, ProductJobEntity.instance(job_dict))
                         self.set_job_by_key(RedisListKeyEnum.product_review_crawl_job,
                                             ProductReviewJobEntity.instance(job_dict))
                 except CrawlErrorException:

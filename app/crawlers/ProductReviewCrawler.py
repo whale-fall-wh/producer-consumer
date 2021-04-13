@@ -45,7 +45,11 @@ class ProductReviewCrawler(BaseAmazonCrawler):
         try:
             if self.site_config_entity.has_en_translate:
                 self.url = self.url + '&language=en_US'
-            Logger().debug('开始抓取{}评论，地址 {}'.format(self.product.asin, self.url))
+            Logger().debug('开始抓取 {} - {}站 - 第{}页 评论，地址 {}'.format(self.product.asin,
+                                                                  self.site.name,
+                                                                  self.job_entity.page,
+                                                                  self.url)
+                           )
             rs = self.get(url=self.url)
             review_list_element = ProductReviewListElement(content=rs.content, site_config=self.site_config_entity)
             review_list = getattr(review_list_element, 'review_list')
@@ -55,7 +59,6 @@ class ProductReviewCrawler(BaseAmazonCrawler):
                     item_content = review_list_element.get_content(review_item)
                     review_item_element = ProductReviewItemElement(item_content, self.site_config_entity)
                     if getattr(review_item_element, 'uuid') and getattr(review_item_element, 'title'):
-                        # 判断是否存在
                         data = review_item_element.get_all_element()
                         data['attr'], data['color'], data['size'] = review_item_element.get_attr_color_size()
                         if data['date'] and self.crawl_date and (self.crawl_date > data['date']) \
