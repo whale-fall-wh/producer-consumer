@@ -13,12 +13,17 @@ class ProductDetailElement(BaseElement):
 
     def __init__(self, content: bytes, siteConfig: SiteConfigEntity):
         self.siteConfig = siteConfig
+        self.product_detail_element = None
         BaseElement.__init__(self, content)
 
     def _get_product_detail_element(self):
+        if self.product_detail_element is not None:
+            return self.product_detail_element
         for xpath in self.siteConfig.product_detail_xpath:
             element = self.html.xpath(xpath)
             if element:
-                return element[0]
+                self.product_detail_element = element[0]
+
+                return self.product_detail_element
 
         return None

@@ -18,7 +18,7 @@ import requests
 
 class KeywordConsumer(BaseConsumer):
     # ignore = True
-    threading_num = 1
+    threading_num = 3
 
     def run_job(self):
         http = Http()

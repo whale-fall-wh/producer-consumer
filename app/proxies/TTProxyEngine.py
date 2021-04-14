@@ -16,7 +16,7 @@ import copy
 
 class TTProxy(BaseProxy):
     """
-    仅海外可用
+    仅海外VPS可用
     https://ttproxy.com/
     """
     proxy_engine = 'tt_proxy'

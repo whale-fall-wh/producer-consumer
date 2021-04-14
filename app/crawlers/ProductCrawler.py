@@ -54,6 +54,8 @@ class ProductCrawler(BaseAmazonCrawler):
                         no_empty_data[k] = v
                 self.save_data(no_empty_data)
                 self.job_entity.crawl_classify and self.crawl_classify_tree(rs.content)
+                if product_element.product_detail_element is None:
+                    raise CrawlErrorException('正常抓取页面，但未获取到产品详情, 地址 {} ，将重新放入队列'.format(self.url))
             else:
                 raise CrawlErrorException('页面请求异常, 地址 {}'.format(self.url))
         except requests.exceptions.RequestException as e:
