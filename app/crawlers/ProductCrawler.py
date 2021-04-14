@@ -64,11 +64,14 @@ class ProductCrawler(BaseAmazonCrawler):
         price = no_empty_data.get('price', '')
         feature_rate = no_empty_data.get('feature_rate', {})
         classify_rank = no_empty_data.get('classify_rank', {})
+        img = no_empty_data.get('img', '')
         product_dict = {}
         if rating:
             product_dict['rating'] = rating
         if available_date:
             product_dict['available_date'] = available_date
+        if img:
+            product_dict['img'] = img
         if self.product:
             self.product_repository.update_by_id(self.product.id, product_dict)
         if self.product_item:
