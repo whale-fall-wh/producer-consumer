@@ -6,14 +6,16 @@
 # @Software: PyCharm
 
 from app.crawlers.BaseAmazonCrawler import BaseAmazonCrawler
-from app.entities import ShopJobEntity
+from app.entities import ShopJobEntity, ProductJobEntity, ProductReviewJobEntity
 from utils import Http, Logger
 from app.repositories import ShopItemRepository, ProductRepository
 from .elements import ShopElement
 import requests
 from app.models import Product, ProductTypeProductRelation, ProductItem
 from app.exceptions import CrawlErrorException
-from app.enums import ProductTypeEnum
+from app.enums import ProductTypeEnum, RedisListKeyEnum
+from app.BaseJob import BaseJob
+from app.services import ProductService
 
 
 class ShopCrawler(BaseAmazonCrawler):
@@ -24,6 +26,7 @@ class ShopCrawler(BaseAmazonCrawler):
         self.crawl_next_page = True
         self.jobEntity = jobEntity
         self.shopItemRepository = ShopItemRepository()
+        self.productService = ProductService()
         self.productRepository = ProductRepository()
         self.shopItem = self.shopItemRepository.show(self.jobEntity.shop_item_id)
         if self.shopItem:
@@ -43,13 +46,10 @@ class ShopCrawler(BaseAmazonCrawler):
             asin_list = list(filter(lambda x: x, all_asin_list))
             for asin in asin_list:
                 product = self.productRepository.update_or_create({'asin': asin})
-                self.save(product)
+                productItem = self.save(product)
+                self.crawl_product_job(productItem)
             self.asin_list = len(asin_list)
-            if self.jobEntity.page == 1 and self.asin_list == 0 and len(all_asin_list) > 0:
-                # all_asin_list 不为空，说明取到数据了，asin_list空，说明店铺不存在或者店铺产品为空，防止search乱输入，这边要将没有product的店铺删除
-                # 店铺产品列表为空时，删除店铺
-                self.shopItem.delete()
-                self.shop.delete()
+            self.productService.add_shop_progress_total(self.shopItem, self.asin_list)
             self.crawl_next_page = self.check_next_page()
         except requests.exceptions.RequestException as e:
             raise CrawlErrorException('shop ' + self.url + ' 请求异常, ' + str(e))
@@ -62,5 +62,20 @@ class ShopCrawler(BaseAmazonCrawler):
             'product_id': product.id,
             'product_type_id': ProductTypeEnum.TYPE_ID_SHOP
         })
-        ProductItem.update_or_create({'product_id': product.id, 'site_id': self.site.id},
-                                     {'shop_item_id': self.shopItem.id})
+
+        return ProductItem.update_or_create({'product_id': product.id, 'site_id': self.site.id},
+                                            {'shop_item_id': self.shopItem.id})
+
+    def crawl_product_job(self, productItem: ProductItem):
+        data = {
+            'product_asin': productItem.product.asin,
+            'product_id': productItem.product.id,
+            'site_id': productItem.site.id,
+            'site_name': productItem.site.name,
+            'product_item_id': productItem.id,
+            'shop_item_id': self.jobEntity.shop_item_id,
+            'crawl_classify': self.jobEntity.crawl_classify
+        }
+
+        BaseJob.set_job_by_key(RedisListKeyEnum.product_crawl_job, ProductJobEntity.instance(data))
+        BaseJob.set_job_by_key(RedisListKeyEnum.product_review_crawl_job, ProductReviewJobEntity.instance(data))

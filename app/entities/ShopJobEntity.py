@@ -15,6 +15,7 @@ class ShopJobEntity(BaseJobEntity):
     site_id = 0
     site_name = ''
     page = 1
+    crawl_classify = False
 
     def set_job_type(self):
         return 'shop_job'

@@ -27,11 +27,16 @@ class ClassifyCrawlProgressRepository(BaseRepository):
         with self.db.auto_commit_db():
             classifyCrawlProgress = self.db.session.query(
                 CurrentModel
-            ).filter_by(model=model_name, mode_id=model.id).first()
+            ).filter_by(model=model_name, model_id=model.id).first()
 
         return classifyCrawlProgress
 
     @staticmethod
-    def add_finished(progress: CurrentModel):
+    def add_finished(progress: CurrentModel, num=1):
         if progress:
-            progress.update({'finished': progress.finished+1})
+            progress.update({'finished': progress.finished+num})
+
+    @staticmethod
+    def add_total(progress: CurrentModel, num=1):
+        if progress:
+            progress.update({'total': progress.total+num})

@@ -12,6 +12,8 @@ class ProductJobEntity(BaseJobEntity):
     site_id = 0
     site_name = ''
     product_item_id = 0
+    shop_item_id = 0
+    crawl_classify = False
 
     def set_job_type(self):
         return 'product_job'

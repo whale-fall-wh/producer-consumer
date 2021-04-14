@@ -6,7 +6,7 @@
 from utils import Logger
 from utils.Http import Http
 import requests
-from app.crawlers.elements import ProductElement
+from app.crawlers.elements import ProductElement, ProductClassifyElement
 from app.crawlers.BaseAmazonCrawler import BaseAmazonCrawler
 from app.exceptions import CrawlErrorException
 from app.entities import ProductJobEntity
@@ -53,6 +53,7 @@ class ProductCrawler(BaseAmazonCrawler):
                     if v:
                         no_empty_data[k] = v
                 self.save_data(no_empty_data)
+                self.job_entity.crawl_classify and self.crawl_classify_tree(rs.content)
             else:
                 raise CrawlErrorException('页面请求异常, 地址 {}'.format(self.url))
         except requests.exceptions.RequestException as e:
@@ -104,3 +105,8 @@ class ProductCrawler(BaseAmazonCrawler):
             return rs.json().get('data', {}).get('path', '')
         except:
             return ''
+
+    def crawl_classify_tree(self, content):
+        classify_crawl = ProductClassifyElement(content, self.site_config_entity)
+        self.product_service.crawl_product_classify_job(classify_crawl, self.product_item)
+        self.product_service.update_shop_item_crawl_progress(self.job_entity.shop_item_id)

@@ -11,7 +11,7 @@ from utils import Logger, Http
 from app.proxies import get_proxy_engine
 from app.exceptions import NotFoundException, CrawlErrorException
 import common
-from app.entities import ShopJobEntity, ProductJobEntity, ProductReviewJobEntity
+from app.entities import ShopJobEntity
 from app.crawlers import ShopCrawler
 from app.repositories import ProductItemRepository
 import requests
@@ -41,8 +41,6 @@ class ShopConsumer(BaseConsumer):
                     if crawl.crawl_next_page:
                         jobEntity.page += 1
                         self.set_job(jobEntity)
-                    else:
-                        self.crawl_shop_product(jobEntity)
                 except CrawlErrorException:
                     # 爬虫失败异常，http 连续失败次数+1
                     self.set_error_job(jobEntity)
@@ -56,17 +54,3 @@ class ShopConsumer(BaseConsumer):
                     self.set_error_job(jobEntity)
                     Logger().error('其他异常, -' + str(e))
                 common.sleep_random()
-
-    def crawl_shop_product(self, jobEntity: ShopJobEntity):
-        productItems = self.productItemRepository.get_by_shop_item_id(jobEntity.shop_item_id)
-        for productItem in productItems:
-            if productItem.product and productItem.site:
-                data = {
-                    'product_asin': productItem.product.asin,
-                    'product_id': productItem.product.id,
-                    'site_id': productItem.site.id,
-                    'site_name': productItem.site.name,
-                    'product_item_id': productItem.id,
-                }
-                self.set_job_by_key(RedisListKeyEnum.product_crawl_job, ProductJobEntity.instance(data))
-                self.set_job_by_key(RedisListKeyEnum.product_review_crawl_job, ProductReviewJobEntity.instance(data))

@@ -17,7 +17,7 @@ import requests
 
 
 class ClassifyTreeConsumer(BaseConsumer):
-    threading_num = 5
+    threading_num = 1
 
     def set_job_key(self) -> str:
         return RedisListKeyEnum.classify_tree_crawl_job
