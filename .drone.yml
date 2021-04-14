@@ -30,4 +30,4 @@ volumes:
       path: /home/service/storage/devops/deploy/.ssh/deployer.id_rsa
   - name: production-key
     host:
-      path: /home/admin/.ssh/id_rsa
+      path: /home/admin/.ssh/python-spider.pem

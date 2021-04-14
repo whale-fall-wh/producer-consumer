@@ -43,9 +43,9 @@ production:
   project: python
   hosts:
     local:
-      ip: 54.219.185.72
+      ip: 47.251.32.63
       port: 22
-      user: ubuntu
+      user: root
       identity_file: ~/.ssh/id_rsa
   config:
     restart_container: true
