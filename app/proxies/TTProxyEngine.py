@@ -31,7 +31,7 @@ class TTProxy(BaseProxy):
             self.params = self.__get_params()
             BaseProxy.__init__(self)
 
-    def get_proxy(self):
+    def get_proxy_ip(self) -> str:
         try:
             response = requests.get(
                 url="https://api.ttproxy.com/v1/obtain",
@@ -43,14 +43,11 @@ class TTProxy(BaseProxy):
             )
 
             proxy_ip = response.json().get('data', {}).get('proxies')[0]
-            return {
-                'http': 'http://{}'.format(proxy_ip),
-                'https': 'http://{}'.format(proxy_ip)
-            }
+            return proxy_ip
 
         except:
             Logger().warning('ttproxy代理获取失败')
-            return None
+            return ''
 
     def get_white_list(self):
         try:

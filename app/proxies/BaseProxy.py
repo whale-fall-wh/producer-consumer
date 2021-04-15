@@ -16,6 +16,11 @@ class BaseProxy(metaclass=ABCMeta):
     def __init__(self):
         Logger().info('启用代理插件：{}'.format(self.proxy_engine))
 
-    @abstractmethod
     def get_proxy(self):
+        ip = self.get_proxy_ip()
+
+        return {'http': ip, 'https': ip} if ip else None
+
+    @abstractmethod
+    def get_proxy_ip(self) -> str:
         pass

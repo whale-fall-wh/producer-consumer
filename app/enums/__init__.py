@@ -5,5 +5,4 @@
 # @File : __init__.py 
 # @Software: PyCharm
 
-from app.enums.ProductTypeEnum import ProductTypeEnum
 from app.enums.RedisListKeyEnum import RedisListKeyEnum

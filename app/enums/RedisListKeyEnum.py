@@ -10,17 +10,4 @@ from app.enums.BaseEnum import BaseEnum
 
 class RedisListKeyEnum(BaseEnum):
 
-    # 添加新的Asin时创建的asin
-    product_add_crawl_job = 'product_add_crawl_job'
-
-    product_crawl_job = 'product_crawl_job'
-
-    product_review_crawl_job = 'product_review_crawl_job'
-
-    shop_crawl_job = 'shop_crawl_job'
-
-    keyword_crawl_job = 'keyword_crawl_job'
-
-    product_classify_crawl_job = 'product_classify_crawl_job'
-
-    classify_tree_crawl_job = 'classify_tree_crawl_job'
+    youtube_crawl_job = 'youtube_crawl_job'

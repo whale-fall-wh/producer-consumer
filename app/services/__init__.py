@@ -4,5 +4,3 @@
 # @Author : wangHua
 # @File : __init__.py 
 # @Software: PyCharm
-
-from app.services.ProductService import ProductService
