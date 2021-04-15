@@ -22,6 +22,7 @@ class ProductProducer(BaseProducer):
     def _schedule(self):
         # 每天凌晨执行任务
         self.schedule.every().day.at('00:00').do(self.start)
+        self.schedule.every().day.at('12:00').do(self.start)
 
     def set_job_key(self) -> str:
         return RedisListKeyEnum.product_crawl_job

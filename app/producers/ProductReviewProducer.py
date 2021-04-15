@@ -46,4 +46,5 @@ class ProductReviewProducer(BaseProducer):
 
     def _schedule(self):
         # 每天凌晨执行任务
-        self.schedule.every().day.at('00:00').do(self.start)
+        self.schedule.every().day.at('01:00').do(self.start)
+        self.schedule.every().day.at('13:00').do(self.start)
