@@ -24,6 +24,17 @@ class BaseEntity(metaclass=ABCMeta):
 
         return self
 
+    def only(self, keys: list) -> dict:
+        data = self.to_dict()
+
+        return {key: value for key, value in data.items() if key in keys}
+
+    def besides(self, keys: list) -> dict:
+        data = self.to_dict()
+        [data.pop(k) for k in keys]
+
+        return data
+
     def to_dict(self):
         return self.__dict__
 

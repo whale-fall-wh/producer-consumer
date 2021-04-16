@@ -7,7 +7,7 @@ from utils.Redis import Redis
 from abc import ABCMeta, abstractmethod
 import common
 import json
-from app.entities.BaseJobEntity import BaseJobEntity
+from app.entities.jobEntities.BaseJobEntity import BaseJobEntity
 from decouple import config
 
 

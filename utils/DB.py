@@ -10,7 +10,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from contextlib import contextmanager
 from settings import CONNECTION_STR
 import sqlalchemy.dialects.mysql as mysql
-from sqlalchemy import Column, Integer, String, Float, Date, TIMESTAMP, DateTime, Text, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, Float, Date, TIMESTAMP, DateTime, Text, ForeignKey, JSON, \
+    UniqueConstraint, Index
 
 
 class DB:
@@ -36,6 +37,8 @@ class DB:
         self.DateTime = DateTime
         self.Text = Text
         self.ForeignKey = ForeignKey
+        self.UniqueConstraint = UniqueConstraint
+        self.Index = Index
         self.JSON = JSON
 
     @contextmanager

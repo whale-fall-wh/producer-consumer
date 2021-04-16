@@ -10,4 +10,4 @@ from app.enums.BaseEnum import BaseEnum
 
 class RedisListKeyEnum(BaseEnum):
 
-    youtube_crawl_job = 'youtube_crawl_job'
+    YOUTUBE_VIDEO_DOWNLOAD_JOB = 'youtube_video_download_job'
