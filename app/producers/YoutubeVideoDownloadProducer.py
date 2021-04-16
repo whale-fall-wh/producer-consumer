@@ -8,9 +8,9 @@
 from app.producers.BaseProducer import BaseProducer
 from app.enums import RedisListKeyEnum
 from app.entities import YoutubeVideoDownloadJobEntity
-
-
-test_url = 'https://www.youtube.com/watch?v=BaW_jenozKc'
+from utils import Http, Logger
+from app.proxies import get_proxy_engine
+import re
 
 
 class YoutubeVideoDownloadProducer(BaseProducer):
@@ -18,8 +18,23 @@ class YoutubeVideoDownloadProducer(BaseProducer):
         return RedisListKeyEnum.YOUTUBE_VIDEO_DOWNLOAD_JOB
 
     def _schedule(self):
-        pass
+        self.schedule.every(10).minutes.do(self.start)
 
     def start(self):
-        entity = YoutubeVideoDownloadJobEntity.instance({'video_url': test_url})
-        self.set_job(entity)
+        try:
+            http = Http()
+            http.set_proxy(get_proxy_engine('local_proxy').get_proxy())
+            headers = {
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
+                              ' Chrome/70.0.3538.77 Safari/537.36'}
+            http.set_headers(headers)
+            url = r"https://www.youtube.com/playlist"
+            html = http.request('GET', url, headers=headers).text
+            videoIds = re.findall('"videoId":"([A-Za-z0-9_-]{11})","thumbnail"', html)
+            for videoId in videoIds:
+                entity = YoutubeVideoDownloadJobEntity.instance(
+                    {'video_url': 'https://www.youtube.com/watch?v={}'.format(videoId)}
+                )
+                self.set_job(entity)
+        except Exception as e:
+            Logger().error("YoutubeVideoDownloadProducer 异常: {}".format(str(e)))

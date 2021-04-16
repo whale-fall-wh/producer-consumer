@@ -10,3 +10,4 @@ from .BaseJobEntity import BaseJobEntity
 
 class YoutubeVideoDownloadJobEntity(BaseJobEntity):
     video_url = ''
+    download = False

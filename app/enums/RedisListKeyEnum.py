@@ -11,3 +11,4 @@ from app.enums.BaseEnum import BaseEnum
 class RedisListKeyEnum(BaseEnum):
 
     YOUTUBE_VIDEO_DOWNLOAD_JOB = 'youtube_video_download_job'
+    YOUTUBE_VIDEO_LIST_DOWNLOAD_JOB = 'youtube_video_list_download_job'

@@ -34,10 +34,11 @@ class YoutubeVideoDownloadConsumer(BaseConsumer):
                 job_dict = self.get_job_obj()
                 if job_dict:
                     jobEntity = YoutubeVideoDownloadJobEntity.instance(job_dict)
+                    Logger().info(jobEntity.video_url)
                     self.ydl_opts['proxy'] = proxyEngine.get_proxy_ip() if proxyEngine else None
                     with youtube_dl.YoutubeDL(self.ydl_opts) as ydl:
-                        result = ydl.extract_info(jobEntity.video_url)
+                        result = ydl.extract_info(jobEntity.video_url, download=jobEntity.download)
                     videoEntity = YoutubeVideoEntity.instance(result)
-                    video = self.youtubeVideoService.save_by_entity(videoEntity)
+                    self.youtubeVideoService.save_by_entity(videoEntity)
             except Exception as e:
                 Logger().error('YouTubeConsumer - {}'.format(str(e)))
