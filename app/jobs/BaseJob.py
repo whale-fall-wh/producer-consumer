@@ -35,7 +35,7 @@ class BaseJob(metaclass=ABCMeta):
             job_str = Redis().db.lpop(self.__get_job_key(self.job_key))
             if job_str:
                 return json.loads(job_str)
-            common.sleep(10)
+            common.sleep(5)
 
     def set_job(self, job_entity: BaseJobEntity):
         return self.set_job_by_key(self.job_key, job_entity)

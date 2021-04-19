@@ -4,6 +4,6 @@
 # @Software: PyCharm
 
 from utils.LoadModules import LoadModules
-from app.consumers.BaseConsumer import BaseConsumer
+from .BaseProducer import BaseProducer
 
-consumers = LoadModules(__path__, BaseConsumer).modules
+producers = LoadModules(__path__, BaseProducer).modules

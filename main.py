@@ -6,7 +6,7 @@
 
 import schedule
 import time
-from app import consumers, producers
+from app.jobs import producers, consumers
 import argparse
 from utils import db
 

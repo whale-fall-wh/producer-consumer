@@ -7,3 +7,5 @@
 
 from .YoutubeVideoDownloadJobEntity import YoutubeVideoDownloadJobEntity
 from .YoutubeVideoListJobEntity import YoutubeVideoListJobEntity
+from .YoutubePlaylistDownloadJobEntity import YoutubePlaylistDownloadJobEntity
+from .YoutubeSearchDownloadJobEntity import YoutubeSearchDownloadJobEntity

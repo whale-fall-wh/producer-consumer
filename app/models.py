@@ -85,6 +85,7 @@ class YoutubeVideo(BaseModel):
     age_limit = db.Column(db.Integer, comment="年龄限制", default=0)
     like_count = db.Column(db.Integer, comment="喜欢数量", default=0)
     dislike_count = db.Column(db.Integer, comment="不喜欢数量", default=0)
+    resource_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey("resources.id"), nullable=True)
 
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
@@ -93,6 +94,7 @@ class YoutubeVideo(BaseModel):
     video_thumbnails = relationship('YoutubeVideoThumbnail', back_populates="video")
 
     uploader = relationship('YoutubeUploader', back_populates="videos")
+    resource = relationship('Resource', uselist=False)
 
 
 class YoutubeVideoFormat(BaseModel):
@@ -104,7 +106,7 @@ class YoutubeVideoFormat(BaseModel):
     format_id = db.Column(db.String(32), index=True)
     url = db.Column(db.Text, nullable=True, comment='仅供展示，如需查看，请通过插件下载')
     asr = db.Column(db.Integer, default=0)
-    filesize = db.Column(db.Integer, default=0)
+    filesize = db.Column(db.BigInt(unsigned=True), default=0)
     format_note = db.Column(db.String(255), default='')
     fps = db.Column(db.Integer, nullable=True)
     height = db.Column(db.Integer, nullable=True)

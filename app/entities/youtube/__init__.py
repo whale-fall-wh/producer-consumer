@@ -9,3 +9,4 @@ from .YoutubeVideoFormatEntity import YoutubeVideoFormatEntity
 from .YoutubeVideoEntity import YoutubeVideoEntity
 from .YoutubeVideoThumbnailEntity import YoutubeVideoThumbnailEntity
 from .YoutubeUploaderEntity import YoutubeUploaderEntity
+from .YoutubePlaylistEntity import YoutubePlaylistEntity

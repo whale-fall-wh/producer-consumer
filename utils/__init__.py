@@ -4,7 +4,6 @@
 # @Software: PyCharm
 
 from utils.Redis import Redis
-from utils.Http import Http
 from utils.DB import DB
 from utils.Singleton import singleton, ThreadSafeSingleton
 from utils.Logger import Logger

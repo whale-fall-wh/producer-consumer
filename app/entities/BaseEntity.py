@@ -6,6 +6,7 @@
 
 
 from abc import ABCMeta
+from copy import deepcopy
 
 
 class BaseEntity(metaclass=ABCMeta):
@@ -30,7 +31,7 @@ class BaseEntity(metaclass=ABCMeta):
         return {key: value for key, value in data.items() if key in keys}
 
     def besides(self, keys: list) -> dict:
-        data = self.to_dict()
+        data = deepcopy(self).to_dict()
         [data.pop(k) for k in keys]
 
         return data

@@ -7,3 +7,4 @@ from .YoutubeUploaderRepository import YoutubeUploaderRepository
 from .YoutubeVideoRepository import YoutubeVideoRepository
 from .YoutubeVideoFormatRepository import YoutubeVideoFormatRepository
 from .YoutubeVideoThumbnailRepository import YoutubeVideoThumbnailRepository
+from .ResourceRepository import ResourceRepository

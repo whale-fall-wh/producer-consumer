@@ -10,4 +10,5 @@ from .BaseJobEntity import BaseJobEntity
 
 class YoutubeVideoDownloadJobEntity(BaseJobEntity):
     video_url = ''
-    download = False
+    format = None           # format_id 字符串类型
+    download = True

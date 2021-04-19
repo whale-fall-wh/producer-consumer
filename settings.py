@@ -10,6 +10,7 @@ import os
 # 目录常量
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 STORAGE_PATH = PROJECT_PATH + '/storage'
+VIDEO_PATH = STORAGE_PATH + '/videos'
 
 # mysql配置
 DATABASE_CONFIG = {

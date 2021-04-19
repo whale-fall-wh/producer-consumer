@@ -15,7 +15,7 @@ class ResourceRepository(BaseRepository):
         return Resource
 
     def save(self, path, url='', resource_type=1):
-        return self.init_model().update_or_create({'path': path}, {'url': url, 'resource_type': resource_type})
+        return self.init_model().update_or_create({'path': path}, {'url': url, 'type': resource_type})
 
     def get_resource(self, resource_id):
         return self.show(resource_id)
