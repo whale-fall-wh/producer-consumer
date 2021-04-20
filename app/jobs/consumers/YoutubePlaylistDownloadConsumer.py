@@ -11,7 +11,6 @@ from app.enums import RedisListKeyEnum
 import youtube_dl
 from app.proxies import get_proxy_engine
 from app.entities import YoutubePlaylistDownloadJobEntity, YoutubePlaylistEntity
-from utils import Logger
 from app.services import YoutubeVideoService
 
 

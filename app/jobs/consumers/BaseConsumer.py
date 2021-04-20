@@ -25,15 +25,15 @@ class BaseConsumer(threading.Thread, BaseJob, metaclass=ABCMeta):
     def run_threading(self):
         while True:
             try:
-                self.start_job()
                 job_dict = self.get_job_obj()
                 if job_dict:
+                    self.start_job(job_dict)
                     self.run_job(job_dict)
 
                 self.finish_job()
             except Exception as e:
                 Logger().error('{} - {}'.format(self.__class__.__name__, str(e)))
-                self.fail()
+                self.fail(e)
 
     def run(self):
         Logger().debug('{} 开启 {} 个线程'.format(self.__class__.__name__, self.threading_num))
@@ -41,14 +41,11 @@ class BaseConsumer(threading.Thread, BaseJob, metaclass=ABCMeta):
             t = threading.Thread(target=self.run_threading)
             t.start()
 
-    def start_job(self):
-        # TODO: 开始任务
-        pass
+    def start_job(self, job_dict: dict):
+        Logger().info("任务：{} 开始，参数：{}".format(self.__class__.__name__, job_dict.__str__()))
 
     def finish_job(self):
-        # TODO: 完成任务
-        pass
+        Logger().info("任务：{} 完成".format(self.__class__.__name__))
 
-    def fail(self):
-        # TODO: 异常任务回滚
-        pass
+    def fail(self, e: Exception):
+        Logger().error('{} - {}'.format(self.__class__.__name__, str(e)))

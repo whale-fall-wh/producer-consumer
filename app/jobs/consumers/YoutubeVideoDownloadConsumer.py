@@ -11,7 +11,6 @@ import youtube_dl
 from settings import VIDEO_PATH
 from app.proxies import get_proxy_engine
 from app.entities import YoutubeVideoDownloadJobEntity, YoutubeVideoEntity
-from utils import Logger
 from app.services import YoutubeVideoService
 
 
@@ -29,7 +28,6 @@ class YoutubeVideoDownloadConsumer(BaseConsumer):
 
     def run_job(self, job_dict: dict):
         jobEntity = YoutubeVideoDownloadJobEntity.instance(job_dict)
-        Logger().info(jobEntity.to_string())
         proxyEngine = get_proxy_engine('local_proxy')
         self.ydl_opts['proxy'] = proxyEngine.get_proxy_ip() if proxyEngine else None
         if jobEntity.format is not None:
