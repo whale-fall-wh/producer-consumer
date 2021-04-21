@@ -29,8 +29,7 @@ class BaseConsumer(threading.Thread, BaseJob, metaclass=ABCMeta):
                 if job_dict:
                     self.start_job(job_dict)
                     self.run_job(job_dict)
-
-                self.finish_job()
+                    self.finish_job()
             except Exception as e:
                 Logger().error('{} - {}'.format(self.__class__.__name__, str(e)))
                 self.fail(e)

@@ -18,5 +18,4 @@ class YoutubeVideoFormatEntity(BaseEntity):
     height = 0
     width = 0
     quality = 0
-    url = 0
     ext = ''

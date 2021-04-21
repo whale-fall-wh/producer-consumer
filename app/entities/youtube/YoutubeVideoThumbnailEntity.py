@@ -11,7 +11,6 @@ from ..BaseEntity import BaseEntity
 class YoutubeVideoThumbnailEntity(BaseEntity):
     video_id = ''
     thumbnail_id = ''
-    url = ''
     width = 0
     height = 0
 

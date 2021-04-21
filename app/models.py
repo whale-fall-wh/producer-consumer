@@ -55,12 +55,12 @@ class BaseModel(db.Model):
 
 
 class YoutubeUploader(BaseModel):
-    __tablename__ = "youtube_uploaders"
+    __tablename__ = "youtube_uploader"
 
     id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
-    uploader_id = db.Column(db.String(32), index=True, comment="UP主ID")
+    uploader_id = db.Column(db.String(32), unique=True, comment="UP主ID")
     uploader = db.Column(db.String(255), index=True, comment="UP主名称")
-    url = db.Column(db.Text, nullable=True, comment="UP主主页")
+    uploader_url = db.Column(db.Text, nullable=True, comment="UP主主页")
 
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
@@ -69,15 +69,14 @@ class YoutubeUploader(BaseModel):
 
 
 class YoutubeVideo(BaseModel):
-    __tablename__ = "youtube_videos"
+    __tablename__ = "youtube_video"
 
     id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
-    video_id = db.Column(db.String(32), index=True, comment="油管视频ID")
+    video_id = db.Column(db.String(32), unique=True, comment="油管视频ID")
     title = db.Column(db.String(255), comment="油管视频标题")
     description = db.Column(db.Text, nullable=True, comment="描述")
     upload_date = db.Column(db.Date, nullable=True, comment="时间")
-    uploader_id = db.Column(db.String(32), db.ForeignKey("youtube_uploaders.uploader_id"), index=True, comment="UP主ID")
-    url = db.Column(db.Text, nullable=True, comment='视频地址，仅供展示，如需查看，请通过插件下载')
+    uploader_id = db.Column(db.String(32), db.ForeignKey("youtube_uploader.uploader_id"), index=True, comment="UP主ID")
     channel_id = db.Column(db.String(32), index=True, comment="频道ID", default=0)
     duration = db.Column(db.Integer, comment="时长", default=0)
     view_count = db.Column(db.Integer, comment="播放次数", default=0)
@@ -85,7 +84,7 @@ class YoutubeVideo(BaseModel):
     age_limit = db.Column(db.Integer, comment="年龄限制", default=0)
     like_count = db.Column(db.Integer, comment="喜欢数量", default=0)
     dislike_count = db.Column(db.Integer, comment="不喜欢数量", default=0)
-    resource_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey("resources.id"), nullable=True)
+    resource_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey("youtube_resource.id"), nullable=True)
 
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
@@ -99,12 +98,11 @@ class YoutubeVideo(BaseModel):
 
 class YoutubeVideoFormat(BaseModel):
     __table_args__ = (db.UniqueConstraint("video_id", "format_id"), )
-    __tablename__ = "youtube_video_formats"
+    __tablename__ = "youtube_video_format"
 
     id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
-    video_id = db.Column(db.String(32), db.ForeignKey("youtube_videos.video_id"), index=True, comment="视频ID")
+    video_id = db.Column(db.String(32), db.ForeignKey("youtube_video.video_id"), index=True, comment="视频ID")
     format_id = db.Column(db.String(32), index=True)
-    url = db.Column(db.Text, nullable=True, comment='仅供展示，如需查看，请通过插件下载')
     asr = db.Column(db.Integer, default=0)
     filesize = db.Column(db.BigInt(unsigned=True), default=0)
     format_note = db.Column(db.String(255), default='')
@@ -113,7 +111,7 @@ class YoutubeVideoFormat(BaseModel):
     width = db.Column(db.Integer, nullable=True)
     ext = db.Column(db.String(32), nullable=True)
     quality = db.Column(db.Integer, default=0)
-    resource_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey("resources.id"), nullable=True)
+    resource_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey("youtube_resource.id"), nullable=True)
 
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
@@ -124,15 +122,14 @@ class YoutubeVideoFormat(BaseModel):
 
 class YoutubeVideoThumbnail(BaseModel):
     __table_args__ = (db.UniqueConstraint("video_id", "thumbnail_id"),)
-    __tablename__ = "youtube_video_thumbnails"
+    __tablename__ = "youtube_video_thumbnail"
     id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
-    video_id = db.Column(db.String(32), db.ForeignKey("youtube_videos.video_id"), index=True, comment="视频ID")
+    video_id = db.Column(db.String(32), db.ForeignKey("youtube_video.video_id"), index=True, comment="视频ID")
     thumbnail_id = db.Column(db.String(32), index=True)
-    url = db.Column(db.Text, nullable=True, comment='仅供展示，如需查看，请通过插件下载')
-    width = db.Column(db.Integer, default=0)
-    height = db.Column(db.Integer, default=0)
+    width = db.Column(db.Integer, nullable=True)
+    height = db.Column(db.Integer, nullable=True)
     resolution = db.Column(db.Integer, default=0)
-    resource_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey("resources.id"), nullable=True)
+    resource_id = db.Column(db.BigInt(unsigned=True), db.ForeignKey("youtube_resource.id"), nullable=True)
 
     created_at = db.Column(db.DateTime, default=func.now())
     updated_at = db.Column(db.DateTime, default=func.now(), onupdate=func.now())
@@ -142,12 +139,12 @@ class YoutubeVideoThumbnail(BaseModel):
 
 
 class Resource(BaseModel):
-    __tablename__ = "resources"
+    __tablename__ = "youtube_resource"
     id = db.Column(db.BigInt(unsigned=True), primary_key=True, autoincrement=True)
-    url = db.Column(db.Text, nullable=True, comment='仅供展示，如需查看，请通过插件下载')
     type = db.Column(db.Integer, default=1, comment='type=1: 本地图片')
     path = db.Column(db.String(255), default='', comment='本地地址')
 
 
 if __name__ == '__main__':
-    db.create_all()
+    with db.auto_commit_db():
+        print(db.session.query(YoutubeUploader).first())
