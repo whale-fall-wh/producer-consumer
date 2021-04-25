@@ -14,13 +14,13 @@ from app.entities import YoutubePlaylistDownloadJobEntity, YoutubePlaylistEntity
 from app.services import YoutubeVideoService
 
 
-class YoutubeVideoDownloadConsumer(BaseConsumer):
+class YoutubePlaylistDownloadConsumer(BaseConsumer):
     ydl_opts = {
     }
 
     def __init__(self):
         self.youtubeVideoService = YoutubeVideoService()
-        BaseConsumer.__init__(self)
+        super(YoutubePlaylistDownloadConsumer, self).__init__()
 
     def set_job_key(self) -> str:
         return RedisListKeyEnum.YOUTUBE_PLAYLIST_DOWNLOAD_JOB

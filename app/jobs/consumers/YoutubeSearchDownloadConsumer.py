@@ -14,7 +14,7 @@ from app.entities import YoutubeSearchDownloadJobEntity, YoutubePlaylistEntity
 from app.services import YoutubeVideoService
 
 
-class YoutubeVideoDownloadConsumer(BaseConsumer):
+class YoutubeSearchDownloadConsumer(BaseConsumer):
     ydl_opts = {
         'noplaylist': 'True',
         '--default-search': 'ytsearch'
@@ -22,7 +22,7 @@ class YoutubeVideoDownloadConsumer(BaseConsumer):
 
     def __init__(self):
         self.youtubeVideoService = YoutubeVideoService()
-        BaseConsumer.__init__(self)
+        super(YoutubeSearchDownloadConsumer, self).__init__()
 
     def set_job_key(self) -> str:
         return RedisListKeyEnum.YOUTUBE_SEARCH_DOWNLOAD_JOB

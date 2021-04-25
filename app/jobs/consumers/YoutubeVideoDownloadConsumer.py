@@ -21,7 +21,7 @@ class YoutubeVideoDownloadConsumer(BaseConsumer):
 
     def __init__(self):
         self.youtubeVideoService = YoutubeVideoService()
-        BaseConsumer.__init__(self)
+        super(YoutubeVideoDownloadConsumer, self).__init__()
     
     def set_job_key(self) -> str:
         return RedisListKeyEnum.YOUTUBE_VIDEO_DOWNLOAD_JOB
