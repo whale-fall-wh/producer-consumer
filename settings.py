@@ -21,7 +21,7 @@ DATABASE_CONFIG = {
     'database': config('DB_DATABASE', ''),
 }
 
-CONNECTION_STR = "mysql+pymysql://{username}:{password}@{host}:{port}/{database}".format(**DATABASE_CONFIG)
+CONNECTION_STR = "mysql+pymysql://{username}:{password}@{host}:{port}/{database}?charset=utf8mb4".format(**DATABASE_CONFIG)
 
 # redis配置
 REDIS_CONFIG = {

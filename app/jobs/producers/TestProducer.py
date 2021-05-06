@@ -19,6 +19,6 @@ class TestProducer(BaseProducer):
 
     def start(self):
         entity = YoutubeSearchDownloadJobEntity.instance(
-            {'keyword': 'husky', 'count': 100}
+            {'keyword': 'husky', 'count': 20}
         )
         self.set_job(entity)
